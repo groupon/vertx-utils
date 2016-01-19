@@ -1,0 +1,13 @@
+language: java
+jdk:
+- oraclejdk8
+cache:
+  directories:
+  - "$HOME/.m2"
+install: true
+before_script:
+- gpg --import groupon-api.key
+script:
+- mvn clean install --settings settings.xml -P ci-strict -Dgpg.skip=true -U
+- if [ \( -n "${TRAVIS_TAG}" \) -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then mvn
+  deploy --settings settings.xml -P ci-strict; fi;
