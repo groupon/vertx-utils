@@ -115,8 +115,8 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com/groupon/vertx-utils.git</connection>
-    <developerConnection>scm:git:git@github.com/groupon/vertx-utils.git</developerConnection>
+    <connection>scm:git:git@github.com:groupon/vertx-utils.git</connection>
+    <developerConnection>scm:git:git@github.com:groupon/vertx-utils.git</developerConnection>
     <url>https://github.com/groupon/vertx-utils</url>
     <tag>HEAD</tag>
   </scm>
