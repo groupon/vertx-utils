@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2015 Groupon.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>com.groupon.api</groupId>
+    <artifactId>api-parent-pom</artifactId>
+    <version>1.0.11</version>
+    <relativePath/>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.groupon.vertx</groupId>
+  <artifactId>vertx-utils</artifactId>
+  <packaging>jar</packaging>
+  <name>Vertx Utilities</name>
+  <description>Library of utility classes and functions for use with Vert.x</description>
+  <url>https://github.com/groupon/vertx-utils</url>
+  <version>3.0.1-SNAPSHOT</version>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>dustyburwell</id>
+      <email>dburwell@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>gilmarkham</id>
+      <email>gilligan@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>namratalele</id>
+      <email>nlele@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>stuartsiegrist</id>
+      <email>fsiegrist@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>swatikumar</id>
+      <email>swkumar@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>trevormack</id>
+      <email>tmack@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>tristanblease</id>
+      <email>tblease@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>villekoskela</id>
+      <email>vkoskela@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/groupon/vertx-utils.git</connection>
+    <developerConnection>scm:git:git@github.com/groupon/vertx-utils.git</developerConnection>
+    <url>https://github.com/groupon/vertx-utils</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <!-- Default parameterized vertx module name -->
+    <module.name>${project.groupId}~${project.artifactId}~${project.version}</module.name>
+
+    <!-- The directory where the module will be assembled -->
+    <mods.directory>target/mods</mods.directory>
+
+    <!--Vertx dependency versions-->
+    <jackson.version>2.6.1</jackson.version>
+    <netty.version>4.0.31.Final</netty.version>
+    <vertx.version>3.1.0</vertx.version>
+
+    <!--Other dependency versions-->
+    <findbugs.annotations.version>3.0.0</findbugs.annotations.version>
+    <jodatime.version>2.1</jodatime.version>
+    <junit.version>4.10</junit.version>
+    <logback.version>1.0.13</logback.version>
+    <logback-steno.version>1.9.3</logback-steno.version>
+    <mockito.version>1.9.5</mockito.version>
+    <powermock.version>1.5.4</powermock.version>
+    <slf4j.version>1.7.4</slf4j.version>
+    <yammer-metrics.version>2.2.0</yammer-metrics.version>
+
+    <!--Coverage Settings-->
+    <jacoco.check.line.coverage>0.5</jacoco.check.line.coverage>
+    <jacoco.check.branch.coverage>0.5</jacoco.check.branch.coverage>
+
+    <!--Plugin versions-->
+    <maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
+    <maven.resources.plugin.version>2.6</maven.resources.plugin.version>
+    <maven.vertx.plugin.version>2.0.1-final</maven.vertx.plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+      <version>${vertx.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web</artifactId>
+      <version>${vertx.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-codegen</artifactId>
+      <version>${vertx.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>${netty.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>${jodatime.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yammer.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <version>${yammer-metrics.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.arpnetworking.logback</groupId>
+      <artifactId>logback-steno</artifactId>
+      <version>${logback-steno.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+      <version>${findbugs.annotations.version}</version>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-core</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Enable Inherited Plugins -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-mod-to-target</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <outputDirectory>${mods.directory}/${module.name}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>target/classes</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*Test*.java</include>
+          </includes>
+          <additionalClasspathElements>
+            <additionalClasspathElement>
+              ${settings.localRepository}/ch/qos/logback/logback-classic/${logback.version}/logback-classic-${logback.version}.jar
+            </additionalClasspathElement>
+            <additionalClasspathElement>
+              ${settings.localRepository}/ch/qos/logback/logback-core/${logback.version}/logback-core-${logback.version}.jar
+            </additionalClasspathElement>
+          </additionalClasspathElements>
+        </configuration>
+      </plugin>
+
+      <!-- Project Specific Plugins -->
+      <plugin>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-maven-plugin</artifactId>
+        <version>${maven.vertx.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>PullInDeps</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>pullInDeps</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>${maven.assembly.plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.groupon.api</groupId>
+            <artifactId>build-resources</artifactId>
+            <version>${build-resources.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>mod-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptorRefs>
+                <descriptorRef>mod</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
