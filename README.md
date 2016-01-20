@@ -5,6 +5,10 @@ vert.x-utils
     <img src="https://img.shields.io/hexpm/l/plug.svg"
          alt="License: Apache 2">
 </a>
+<a href="https://travis-ci.org/groupon/vertx-utils/">
+    <img src="https://travis-ci.org/groupon/vertx-utils.png"
+         alt="Travis Build">
+</a>
 <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.groupon.vertx%22%20a%3A%22vertx-utils%22">
     <img src="https://img.shields.io/maven-central/v/com.groupon.vertx/vertx-utils.svg"
          alt="Maven Artifact">
