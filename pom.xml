@@ -29,7 +29,7 @@
   <name>Vertx Utilities</name>
   <description>Library of utility classes and functions for use with Vert.x</description>
   <url>https://github.com/groupon/vertx-utils</url>
-  <version>3.0.2-SNAPSHOT</version>
+  <version>3.1.0-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -121,27 +121,20 @@
   </scm>
 
   <properties>
-    <!-- Default parameterized vertx module name -->
-    <module.name>${project.groupId}~${project.artifactId}~${project.version}</module.name>
-
-    <!-- The directory where the module will be assembled -->
-    <mods.directory>target/mods</mods.directory>
-
     <!--Vertx dependency versions-->
     <jackson.version>2.6.1</jackson.version>
-    <netty.version>4.0.31.Final</netty.version>
-    <vertx.version>3.1.0</vertx.version>
+    <netty.version>4.0.33.Final</netty.version>
+    <vertx.version>3.2.1</vertx.version>
 
     <!--Other dependency versions-->
-    <findbugs.annotations.version>3.0.0</findbugs.annotations.version>
+    <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
     <jodatime.version>2.1</jodatime.version>
-    <junit.version>4.10</junit.version>
+    <junit.version>4.11</junit.version>
     <logback.version>1.0.13</logback.version>
     <logback-steno.version>1.9.3</logback-steno.version>
     <mockito.version>1.9.5</mockito.version>
     <powermock.version>1.5.4</powermock.version>
-    <slf4j.version>1.7.4</slf4j.version>
-    <yammer-metrics.version>2.2.0</yammer-metrics.version>
+    <slf4j.version>1.7.12</slf4j.version>
 
     <!--Coverage Settings-->
     <jacoco.check.line.coverage>0.5</jacoco.check.line.coverage>
@@ -150,7 +143,7 @@
     <!--Plugin versions-->
     <maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
     <maven.resources.plugin.version>2.6</maven.resources.plugin.version>
-    <maven.vertx.plugin.version>2.0.1-final</maven.vertx.plugin.version>
+    <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -173,48 +166,21 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
       <version>${vertx.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web</artifactId>
-      <version>${vertx.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-codegen</artifactId>
       <version>${vertx.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId>
+      <artifactId>netty-codec-http</artifactId>
       <version>${netty.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
       <version>${jodatime.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.yammer.metrics</groupId>
-      <artifactId>metrics-core</artifactId>
-      <version>${yammer-metrics.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.arpnetworking.logback</groupId>
@@ -301,22 +267,20 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven.dependency.plugin.version}</version>
         <executions>
           <execution>
-            <id>copy-mod-to-target</id>
-            <phase>process-classes</phase>
+            <id>analyze</id>
+            <phase>verify</phase>
             <goals>
-              <goal>copy-resources</goal>
+              <goal>analyze-only</goal>
             </goals>
             <configuration>
-              <overwrite>true</overwrite>
-              <outputDirectory>${mods.directory}/${module.name}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>target/classes</directory>
-                </resource>
-              </resources>
+              <failOnWarning>true</failOnWarning>
+              <ignoredUnusedDeclaredDependencies>
+                <dependency>io.vertx:vertx-codegen</dependency>
+              </ignoredUnusedDeclaredDependencies>
             </configuration>
           </execution>
         </executions>
@@ -337,49 +301,6 @@
             </additionalClasspathElement>
           </additionalClasspathElements>
         </configuration>
-      </plugin>
-
-      <!-- Project Specific Plugins -->
-      <plugin>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-maven-plugin</artifactId>
-        <version>${maven.vertx.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>PullInDeps</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>pullInDeps</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven.assembly.plugin.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>com.groupon.api</groupId>
-            <artifactId>build-resources</artifactId>
-            <version>${build-resources.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>mod-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptorRefs>
-                <descriptorRef>mod</descriptorRef>
-              </descriptorRefs>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

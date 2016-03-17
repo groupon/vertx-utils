@@ -257,4 +257,21 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
         serverResponse.closeHandler(handler);
         return this;
     }
+
+    @Override
+    public long bytesWritten() {
+        return serverResponse.bytesWritten();
+    }
+
+    @Override
+    public HttpServerResponse sendFile(String filename, long offset) {
+        serverResponse.sendFile(filename, offset);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse sendFile(String filename, long offset, Handler<AsyncResult<Void>> resultHandler) {
+        serverResponse.sendFile(filename, offset, resultHandler);
+        return this;
+    }
 }

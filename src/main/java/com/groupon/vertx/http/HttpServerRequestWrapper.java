@@ -209,4 +209,9 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     public boolean isEnded() {
         return serverRequest.isEnded();
     }
+
+    @Override
+    public boolean isSSL() {
+        return serverRequest.isSSL();
+    }
 }
