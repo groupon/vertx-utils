@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.groupon.api</groupId>
     <artifactId>api-parent-pom</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <relativePath />
   </parent>
 
@@ -139,11 +139,6 @@
     <!--Coverage Settings-->
     <jacoco.check.line.coverage>0.5</jacoco.check.line.coverage>
     <jacoco.check.branch.coverage>0.5</jacoco.check.branch.coverage>
-
-    <!--Plugin versions-->
-    <maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
-    <maven.resources.plugin.version>2.6</maven.resources.plugin.version>
-    <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -268,16 +263,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>${maven.dependency.plugin.version}</version>
         <executions>
           <execution>
             <id>analyze</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>analyze-only</goal>
-            </goals>
             <configuration>
-              <failOnWarning>true</failOnWarning>
               <ignoredUnusedDeclaredDependencies>
                 <dependency>io.vertx:vertx-codegen</dependency>
               </ignoredUnusedDeclaredDependencies>
