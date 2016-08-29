@@ -21,7 +21,7 @@ import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -89,8 +89,8 @@ public class HealthcheckHandlerTest {
 
         existCaptor.getValue().handle(existsResult);
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         verify(response, times(1)).setStatusCode(OK.code());
         verify(response, times(1)).setStatusMessage(OK.reasonPhrase());
         verify(response, times(1)).end(OK.reasonPhrase());
@@ -106,8 +106,8 @@ public class HealthcheckHandlerTest {
         verify(vertx, times(1)).fileSystem();
         verify(fileSystem, times(1)).existsBlocking(eq("filepath"));
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         verify(response, times(1)).setStatusCode(OK.code());
         verify(response, times(1)).setStatusMessage(OK.reasonPhrase());
         verify(response, times(1)).end(OK.reasonPhrase());
@@ -124,8 +124,8 @@ public class HealthcheckHandlerTest {
 
         existCaptor.getValue().handle(existsResult);
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end(SERVICE_UNAVAILABLE.reasonPhrase());
@@ -143,8 +143,8 @@ public class HealthcheckHandlerTest {
 
         verify(fileSystem, times(1)).existsBlocking(eq("filepath"));
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end(SERVICE_UNAVAILABLE.reasonPhrase());
@@ -161,8 +161,8 @@ public class HealthcheckHandlerTest {
         verify(vertx, times(1)).fileSystem();
         verify(fileSystem, times(1)).exists(eq("filepath"), existCaptor.capture());
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end(SERVICE_UNAVAILABLE.reasonPhrase() + ": " + exception.getMessage());
@@ -182,8 +182,8 @@ public class HealthcheckHandlerTest {
         verify(vertx, times(1)).fileSystem();
         verify(fileSystem, times(1)).existsBlocking(eq("filepath"));
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end(SERVICE_UNAVAILABLE.reasonPhrase() + ": " + exception.getMessage());
@@ -201,9 +201,9 @@ public class HealthcheckHandlerTest {
 
         existCaptor.getValue().handle(existsResult);
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + OK.reasonPhrase().length());
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_LENGTH, "" + OK.reasonPhrase().length());
         verify(response, times(1)).setStatusCode(OK.code());
         verify(response, times(1)).setStatusMessage(OK.reasonPhrase());
         verify(response, times(1)).end();
@@ -225,9 +225,9 @@ public class HealthcheckHandlerTest {
 
         verify(fileSystem, times(1)).existsBlocking(eq("filepath"));
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + OK.reasonPhrase().length());
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_LENGTH, "" + OK.reasonPhrase().length());
         verify(response, times(1)).setStatusCode(OK.code());
         verify(response, times(1)).setStatusMessage(OK.reasonPhrase());
         verify(response, times(1)).end();
@@ -246,9 +246,9 @@ public class HealthcheckHandlerTest {
 
         existCaptor.getValue().handle(existsResult);
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + SERVICE_UNAVAILABLE.reasonPhrase().length());
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_LENGTH, "" + SERVICE_UNAVAILABLE.reasonPhrase().length());
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end();
@@ -268,9 +268,9 @@ public class HealthcheckHandlerTest {
 
         verify(fileSystem, times(1)).existsBlocking(eq("filepath"));
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + SERVICE_UNAVAILABLE.reasonPhrase().length());
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_LENGTH, "" + SERVICE_UNAVAILABLE.reasonPhrase().length());
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end();
@@ -290,9 +290,9 @@ public class HealthcheckHandlerTest {
         verify(vertx, times(1)).fileSystem();
         verify(fileSystem, times(1)).exists(eq("filepath"), existCaptor.capture());
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + body.length());
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_LENGTH, "" + body.length());
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end();
@@ -315,9 +315,9 @@ public class HealthcheckHandlerTest {
         verify(vertx, times(1)).fileSystem();
         verify(fileSystem, times(1)).existsBlocking(eq("filepath"));
 
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
-        verify(response, times(1)).putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + body.length());
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
+        verify(response, times(1)).putHeader(HttpHeaderNames.CONTENT_LENGTH, "" + body.length());
         verify(response, times(1)).setStatusCode(SERVICE_UNAVAILABLE.code());
         verify(response, times(1)).setStatusMessage(SERVICE_UNAVAILABLE.reasonPhrase());
         verify(response, times(1)).end();

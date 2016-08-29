@@ -16,7 +16,7 @@
 package com.groupon.vertx.utils;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
@@ -53,7 +53,7 @@ public abstract class HealthcheckHandler implements Handler<HttpServerRequest> {
         if (includeBody) {
             request.response().end(responseBody);
         } else {
-            request.response().putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + responseBody.length());
+            request.response().putHeader(HttpHeaderNames.CONTENT_LENGTH, Integer.toString(responseBody.length()));
             request.response().end();
         }
 
@@ -72,7 +72,7 @@ public abstract class HealthcheckHandler implements Handler<HttpServerRequest> {
         if (includeBody) {
             request.response().end(responseBody);
         } else {
-            request.response().putHeader(HttpHeaders.Names.CONTENT_LENGTH, "" + responseBody.length());
+            request.response().putHeader(HttpHeaderNames.CONTENT_LENGTH, Integer.toString(responseBody.length()));
             request.response().end();
         }
 
@@ -82,8 +82,8 @@ public abstract class HealthcheckHandler implements Handler<HttpServerRequest> {
     }
 
     private void setCommonHttpResponse(HttpServerRequest request, HttpResponseStatus status) {
-        request.response().putHeader(HttpHeaders.Names.CONTENT_TYPE, CONTENT_TYPE);
-        request.response().putHeader(HttpHeaders.Names.CACHE_CONTROL, CACHE_CONTROL);
+        request.response().putHeader(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE);
+        request.response().putHeader(HttpHeaderNames.CACHE_CONTROL, CACHE_CONTROL);
         request.response().setStatusCode(status.code());
         request.response().setStatusMessage(status.reasonPhrase());
     }

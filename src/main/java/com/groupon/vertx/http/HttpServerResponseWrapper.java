@@ -20,6 +20,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 
 /**
@@ -261,6 +262,41 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     @Override
     public long bytesWritten() {
         return serverResponse.bytesWritten();
+    }
+
+    @Override
+    public int streamId() {
+        return serverResponse.streamId();
+    }
+
+    @Override
+    public HttpServerResponse push(final HttpMethod httpMethod, final String host, final String path, final Handler<AsyncResult<HttpServerResponse>> handler) {
+        return serverResponse.push(httpMethod, host, path, handler);
+    }
+
+    @Override
+    public HttpServerResponse push(final HttpMethod httpMethod, final String path, final MultiMap headers, final Handler<AsyncResult<HttpServerResponse>> handler) {
+        return serverResponse.push(httpMethod, path, headers, handler);
+    }
+
+    @Override
+    public HttpServerResponse push(final HttpMethod httpMethod, final String path, final Handler<AsyncResult<HttpServerResponse>> handler) {
+        return serverResponse.push(httpMethod, path, handler);
+    }
+
+    @Override
+    public HttpServerResponse push(final HttpMethod httpMethod, final String host, final String path, final MultiMap headers, final Handler<AsyncResult<HttpServerResponse>> handler) {
+        return serverResponse.push(httpMethod, host, path, headers, handler);
+    }
+
+    @Override
+    public void reset(final long code) {
+        serverResponse.reset(code);
+    }
+
+    @Override
+    public HttpServerResponse writeCustomFrame(final int type, final int flags, final Buffer payload) {
+        return serverResponse.writeCustomFrame(type, flags, payload);
     }
 
     @Override
