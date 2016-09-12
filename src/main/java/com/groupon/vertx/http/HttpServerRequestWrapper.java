@@ -22,6 +22,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpConnection;
+import io.vertx.core.http.HttpFrame;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerFileUpload;
 import io.vertx.core.http.HttpServerRequest;
@@ -68,6 +70,11 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
+    public String rawMethod() {
+        return serverRequest.rawMethod();
+    }
+
+    @Override
     public String uri() {
         return serverRequest.uri();
     }
@@ -80,6 +87,11 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     @Override
     public String query() {
         return serverRequest.query();
+    }
+
+    @Override
+    public String host() {
+        return serverRequest.host();
     }
 
     @Override
@@ -211,7 +223,22 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
+    public HttpServerRequest customFrameHandler(final Handler<HttpFrame> handler) {
+        return serverRequest.customFrameHandler(handler);
+    }
+
+    @Override
+    public HttpConnection connection() {
+        return serverRequest.connection();
+    }
+
+    @Override
     public boolean isSSL() {
         return serverRequest.isSSL();
+    }
+
+    @Override
+    public String scheme() {
+        return serverRequest.scheme();
     }
 }
