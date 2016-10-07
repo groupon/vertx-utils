@@ -37,6 +37,8 @@ public class ConfigLoader {
     private final ConcurrentMap<String, JsonObject> loadedConfigs = new ConcurrentHashMap<>();
     private FileSystem fileSystem;
 
+    private static final ConfigParser DEFAULT_CONFIG_PARSER = new DefaultConfigParser();
+
     /**
      * @param fileSystem Shared Vertx reference
      */
@@ -121,10 +123,12 @@ public class ConfigLoader {
 
         fileSystem.readFile(path, new AsyncResultHandler<Buffer>() {
             @Override
+            @SuppressFBWarnings("REC_CATCH_EXCEPTION")
             public void handle(AsyncResult<Buffer> result) {
                 if (result.succeeded()) {
                     try {
-                        JsonObject loadedConfig = new JsonObject(result.result().toString());
+                        final ConfigParser configParser = getConfigParser();
+                        JsonObject loadedConfig = configParser.parse(result.result().toString());
                         configFuture.complete(loadedConfig);
                     } catch (Exception e) {
                         configFuture.fail(e);
@@ -136,5 +140,15 @@ public class ConfigLoader {
         });
 
         return configFuture;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ConfigParser getConfigParser()
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        final String configParserClassName = System.getProperty("vertx-utils.config-parser-class-name");
+        if (configParserClassName != null) {
+            return (ConfigParser) Class.forName(configParserClassName).newInstance();
+        }
+        return DEFAULT_CONFIG_PARSER;
     }
 }

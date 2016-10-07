@@ -29,7 +29,7 @@
   <name>Vertx Utilities</name>
   <description>Library of utility classes and functions for use with Vert.x</description>
   <url>https://github.com/groupon/vertx-utils</url>
-  <version>3.1.2-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
 
   <licenses>
     <license>
