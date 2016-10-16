@@ -49,7 +49,14 @@ public class VerticleConfig {
         }
 
         this.name = name;
-        instances = deployConfig.getInteger("instances");
+        final Object instancesAsObject = deployConfig.getValue("instances");
+        if (instancesAsObject instanceof Integer) {
+            instances = (Integer) instancesAsObject;
+        } else if (instancesAsObject instanceof String) {
+            instances = parseInstances((String) instancesAsObject);
+        } else {
+            throw new ClassCastException("Unsupported class type for 'instances'");
+        }
         className = deployConfig.getString("class");
         config = deployConfig.getValue("config");
         isWorker = deployConfig.getBoolean("worker", false);
@@ -73,6 +80,15 @@ public class VerticleConfig {
 
         if (className == null) {
             throw new IllegalStateException(String.format("Field `className` not specified for for verticle %s", name));
+        }
+    }
+
+    private int parseInstances(final String instancesAsString) {
+        if (instancesAsString.endsWith("C")) {
+            return Integer.parseInt(instancesAsString.substring(0, instancesAsString.length() - 1)) *
+                    Runtime.getRuntime().availableProcessors();
+        } else {
+            return Integer.parseInt(instancesAsString);
         }
     }
 
