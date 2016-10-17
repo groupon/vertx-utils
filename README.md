@@ -35,6 +35,8 @@ vertx.setTimer(1000, rescheduleHandler);
 ## MainVerticle
 
 Used to deploy a configurable number of instances of different verticles and enforce dependencies between the verticles.
+The number of instances may be specified as a multiple per core by suffixing the value with "C" (e.g. ```"instances":"2C"```
+is two instances per core). 
 
 Example mainConf.json:
 
