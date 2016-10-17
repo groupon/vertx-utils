@@ -13,6 +13,10 @@ vert.x-utils
     <img src="https://img.shields.io/maven-central/v/com.groupon.vertx/vertx-utils.svg"
          alt="Maven Artifact">
 </a>
+<a href="http://javadoc.io/doc/com.groupon.vertx/vertx-utils">
+    <img src="http://javadoc.io/badge/com.groupon.vertx/vertx-utils.svg" 
+         alt="Javadocs">
+</a>
 
 A collection of utilities for Vert.x which allow for simplified deployment, standardized logging, rescheduling of handlers, and a file based health check handler.
 
@@ -78,6 +82,14 @@ A wrapper to provide standardized logging calls using slf4j and the com.arpnetwo
 Logger log = Logger.getLogger(Example.class);
 log.info("sampleMethod", "Hello logging world!");
 ```
+
+## Configuration
+
+In the MainVerticle's configuration each child verticle's _config_ key is either an inline JSON object or a 
+String representing a file path. If you specify a file path you may also specify a custom parser with the 
+system property vertx-utils.config-parser-class-name (e.g. _-Dvertx-utils.config-parser-class-name=com.example.MyParser_).
+This parser receives the file contents and is required to return a Vert.x JsonObject. Use it to translate
+your preferred configuration (e.g. hocon, properties, yaml, xml, etc.) into JSON.
 
 Building
 --------
