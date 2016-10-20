@@ -87,22 +87,21 @@ public class MultiVerticleDeployment {
                 if (result.succeeded()) {
                     deploymentResult.complete(null);
                 } else {
-                    Throwable cause = result.cause();
-                    String reason = "Failed to deploy verticle: " + cause.getMessage();
-                    log.error("deploy", "failure", reason, cause);
-                    deploymentResult.fail(new Exception(reason, cause));
+                    deploymentResult.fail(result.cause());
                 }
             }
         });
 
-        log.info("deploy", "deployFirstVerticle");
         final Iterator<VerticleConfig> verticleConfigIterator = deployConfig.iterator();
-        deployVerticle(verticleConfigIterator.next(), new AsyncResultHandler<String>() {
+        VerticleConfig verticleConfig = verticleConfigIterator.next();
+        log.info("deploy", "deployFirstVerticle", new String[]{"message"}, String.format("Deploying verticle %s", verticleConfig.getName()));
+        deployVerticle(verticleConfig, new AsyncResultHandler<String>() {
             @Override
             public void handle(AsyncResult<String> result) {
                 if (verticleConfigIterator.hasNext()) {
-                    log.info("deploy", "deployNextVerticle");
-                    deployVerticle(verticleConfigIterator.next(), this);
+                    VerticleConfig nextVerticleConfig = verticleConfigIterator.next();
+                    log.info("deploy", "deployNextVerticle", new String[]{"message"}, String.format("Deploying verticle %s", nextVerticleConfig.getName()));
+                    deployVerticle(nextVerticleConfig, this);
                 }
 
                 deploymentMonitorHandler.handle(result);
@@ -134,9 +133,7 @@ public class MultiVerticleDeployment {
                 if (configResult.succeeded()) {
                     deployment.deploy(config.getInstances(), configResult.result());
                 } else {
-                    String reason = String.format("Failed to load config for verticle %s", config.getName());
-                    log.error("deployVerticle", "configError", reason, configResult.cause());
-                    deployment.abort(new Exception(reason, configResult.cause()));
+                    deployment.abort(new Exception(String.format("Failed to load config for verticle %s", config.getName()), configResult.cause()));
                 }
             }
         });
