@@ -19,6 +19,9 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.MessageCodec;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import com.groupon.vertx.utils.config.ConfigLoader;
@@ -39,6 +42,7 @@ import com.groupon.vertx.utils.deployment.MultiVerticleDeployment;
 public class MainVerticle extends AbstractVerticle {
     private static final Logger log = Logger.getLogger(MainVerticle.class, "mainVerticle");
     private static final String ABORT_ON_FAILURE_FIELD = "abortOnFailure";
+    private static final String MESSAGE_CODECS_FIELD = "messageCodecs";
 
     /**
      * @param startedResult future indicating when all verticles have been deployed successfully
@@ -47,6 +51,14 @@ public class MainVerticle extends AbstractVerticle {
     public void start(final Future<Void> startedResult) {
         final JsonObject config = config();
         final boolean abortOnFailure = config.getBoolean(ABORT_ON_FAILURE_FIELD, true);
+
+        try {
+            registerMessageCodecs(vertx, config, abortOnFailure);
+        } catch (final CodecRegistrationException e) {
+            log.error("start", "abort", "Shutting down due to one or more errors", e);
+            vertx.close();
+            return;
+        }
 
         Future<Void> deployResult = deployVerticles(config);
         deployResult.setHandler(new AsyncResultHandler<Void>() {
@@ -68,5 +80,55 @@ public class MainVerticle extends AbstractVerticle {
 
     public Future<Void> deployVerticles(JsonObject config) {
         return new MultiVerticleDeployment(vertx, new DeploymentFactory(), new ConfigLoader(vertx.fileSystem())).deploy(config);
+    }
+
+    /* package private */ static void registerMessageCodecs(
+            final Vertx vertx,
+            final JsonObject config,
+            final boolean abortOnFailure)
+            throws CodecRegistrationException {
+
+        final JsonArray messageCodecs = config.getJsonArray(MESSAGE_CODECS_FIELD);
+        if (messageCodecs != null) {
+            for (final Object messageCodecClassNameObject : messageCodecs.getList()) {
+                if (messageCodecClassNameObject instanceof String) {
+                    final String messageCodecClassName = (String) messageCodecClassNameObject;
+                    try {
+                        final MessageCodec<?, ?>  messageCodec = (MessageCodec<?, ?>) Class.forName(messageCodecClassName).newInstance();
+                        vertx.eventBus().registerCodec(messageCodec);
+                    } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                        log.warn("registerMessageCodecs", "start", new String[]{"message", "messageCodecClassName"}, "Failed to instantiate message codec", messageCodecClassName, e);
+                        if (abortOnFailure) {
+                            throw new CodecRegistrationException(
+                                    String.format(
+                                            "Failed to instantiate message codec %s",
+                                            messageCodecClassName),
+                                    e);
+                        }
+                    }
+                } else {
+                    log.warn("registerMessageCodecs", "start", new String[]{"message", "messageCodecClassName"}, "Ignoring non-string message codec class name", messageCodecClassNameObject);
+                    if (abortOnFailure) {
+                        throw new CodecRegistrationException("Ignoring non-string message codec class name");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Exception for failures registering a Vert.x message codec.
+     */
+    /* package private */ static final class CodecRegistrationException extends Exception {
+
+        private static final long serialVersionUID = 7375493553868519673L;
+
+        /* package private */ CodecRegistrationException(final String message) {
+            super(message);
+        }
+
+        /* package private */ CodecRegistrationException(final String message, final Throwable cause) {
+            super(message, cause);
+        }
     }
 }
