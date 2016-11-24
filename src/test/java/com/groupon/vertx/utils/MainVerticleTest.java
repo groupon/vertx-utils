@@ -15,6 +15,7 @@
  */
 package com.groupon.vertx.utils;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
@@ -31,6 +32,10 @@ import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.eventbus.MessageCodec;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.junit.After;
 import org.junit.Before;
@@ -38,6 +43,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -126,5 +132,103 @@ public class MainVerticleTest {
 
         verticle.start(startedResult);
         deployResult.fail(new Exception("failure"));
+    }
+
+    @Test
+    public void testMessageCodecCausingFailure() {
+        config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$NonExistentCodec\"]"));
+        verticle.start(startedResult);
+        verify(vertx).close();
+        latch.countDown();
+    }
+
+    @Test
+    public void testMessageCodecIgnoringFailure() {
+        config.put("abortOnFailure", false);
+        config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$NonExistentCodec\"]"));
+
+        startedResult.setHandler(new AsyncResultHandler<Void>() {
+            @Override
+            public void handle(AsyncResult<Void> result) {
+                assertFalse(result.failed());
+                verify(vertx, never()).close();
+                latch.countDown();
+            }
+        });
+
+        verticle.start(startedResult);
+        deployResult.complete(null);
+    }
+
+    @Test
+    public void testRegisterMessageCodecs() throws MainVerticle.CodecRegistrationException {
+        config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$MyMessageCodec\"]"));
+
+        final EventBus eventBus = Mockito.mock(EventBus.class);
+        Mockito.doReturn(eventBus).when(vertx).eventBus();
+
+        MainVerticle.registerMessageCodecs(vertx, config, false);
+
+        Mockito.verify(eventBus).registerCodec(Mockito.any(MyMessageCodec.class));
+        latch.countDown();
+    }
+
+    @Test
+    public void testRegisterMessageCodecNotFoundIgnoreFailure() throws MainVerticle.CodecRegistrationException {
+        config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$NonExistentCodec\"]"));
+
+        final EventBus eventBus = Mockito.mock(EventBus.class);
+        Mockito.doReturn(eventBus).when(vertx).eventBus();
+
+        MainVerticle.registerMessageCodecs(vertx, config, false);
+
+        Mockito.verify(eventBus, Mockito.never()).registerCodec(Mockito.any(MyMessageCodec.class));
+        latch.countDown();
+    }
+
+    @Test
+    public void testRegisterMessageCodecNotFoundAbortOnFailure() {
+        config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$NonExistentCodec\"]"));
+
+        final EventBus eventBus = Mockito.mock(EventBus.class);
+        Mockito.doReturn(eventBus).when(vertx).eventBus();
+
+        try {
+            MainVerticle.registerMessageCodecs(vertx, config, true);
+            fail("Expected exception not thrown");
+        } catch (final MainVerticle.CodecRegistrationException e) {
+            // Expected exception
+        }
+
+        Mockito.verify(eventBus, Mockito.never()).registerCodec(Mockito.any(MyMessageCodec.class));
+        latch.countDown();
+    }
+
+    public static final class MyMessageCodec<T> implements MessageCodec<T, T> {
+
+        @Override
+        public void encodeToWire(final Buffer buffer, final T t) {
+            throw new UnsupportedOperationException("This is not a functional message codec");
+        }
+
+        @Override
+        public T decodeFromWire(final int pos, final Buffer buffer) {
+            throw new UnsupportedOperationException("This is not a functional message codec");
+        }
+
+        @Override
+        public T transform(final T t) {
+            throw new UnsupportedOperationException("This is not a functional message codec");
+        }
+
+        @Override
+        public String name() {
+            return this.getClass().getSimpleName();
+        }
+
+        @Override
+        public byte systemCodecID() {
+            return -1;
+        }
     }
 }

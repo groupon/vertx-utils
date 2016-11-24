@@ -38,6 +38,9 @@ Used to deploy a configurable number of instances of different verticles and enf
 The number of instances may be specified as a multiple per core by suffixing the value with "C" (e.g. ```"instances":"2C"```
 is two instances per core). 
 
+The configuration also allows you to optionally register one or more ```MessageCodec``` implementations by specifying an
+array of fully qualified class names. Each ```MessageCodec``` class is required to have a no-args public constructor.
+
 Example mainConf.json:
 
 ```json
@@ -56,7 +59,10 @@ Example mainConf.json:
       "config": { },
       "dependencies": [ "MetricsVerticle" ]
     }
-  }
+  },
+  "messageCodecs": [
+    "com.groupon.example.vertx.MyMessageCodec"
+  ]
 }
 ```
 
