@@ -15,6 +15,7 @@
  */
 package com.groupon.vertx.utils.deployment;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.AsyncResult;
@@ -34,7 +35,7 @@ import com.groupon.vertx.utils.Logger;
 public class DeploymentMonitorHandler implements AsyncResultHandler<String> {
     private static final Logger log = Logger.getLogger(DeploymentMonitorHandler.class, "verticleDeployHandler");
 
-    private final AtomicInteger failures;
+    private final ConcurrentLinkedQueue<Throwable> failures;
     private final AtomicInteger deploymentsRemaining;
     private final int totalVerticles;
     private final Future<Void> future;
@@ -46,7 +47,7 @@ public class DeploymentMonitorHandler implements AsyncResultHandler<String> {
     public DeploymentMonitorHandler(int totalVerticles, AsyncResultHandler<Void> finishedHandler) {
         this.totalVerticles = totalVerticles;
 
-        failures = new AtomicInteger(0);
+        failures = new ConcurrentLinkedQueue<>();
         deploymentsRemaining = new AtomicInteger(totalVerticles);
 
         future = Future.future();
@@ -61,11 +62,9 @@ public class DeploymentMonitorHandler implements AsyncResultHandler<String> {
 
     private void checkForFailures(AsyncResult<String> result) {
         if (result.failed()) {
-            failures.incrementAndGet();
-            log.error("handle", "error", "Caught exception; failed to deploy verticle", result.cause());
+            failures.add(result.cause());
         } else if (result.result().isEmpty()) {
-            failures.incrementAndGet();
-            log.error("handle", "error", "Empty deployment ID; failed to deploy verticle", new Exception());
+            failures.add(new Exception("Empty deployment ID; failed to deploy verticle"));
         }
     }
 
@@ -76,13 +75,20 @@ public class DeploymentMonitorHandler implements AsyncResultHandler<String> {
     }
 
     private void handleCompletion() {
-        if (failures.get() == 0) {
+        if (failures.isEmpty()) {
             log.info("handleCompletion", "success", new String[]{"message"}, String.format("Deployed %d verticle(s) successfully", totalVerticles));
             future.complete(null);
         } else {
-            String reason = String.format("Failed to deploy %d of %d verticle(s)", failures.get(), totalVerticles);
-            log.error("handleCompletion", "error", reason);
-            future.fail(new Exception(reason));
+            String reason = String.format("Failed to deploy %d of %d verticle(s)", failures.size(), totalVerticles);
+
+            Exception cause = new Exception(reason);
+            for (Throwable failure : failures) {
+                cause.addSuppressed(failure);
+            }
+
+            log.error("handleCompletion", "error", reason, cause);
+
+            future.fail(cause);
         }
     }
 }

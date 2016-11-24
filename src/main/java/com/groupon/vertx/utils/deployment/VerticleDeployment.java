@@ -57,12 +57,12 @@ public class VerticleDeployment implements Deployment {
             @Override
             public void handle(AsyncResult<String> deployResult) {
                 if (deployResult.succeeded() && !deployResult.result().isEmpty()) {
+                    log.debug("deploy", "success", new String[]{"message"}, String.format("Deployed verticle %s successfully", name));
                     deployId.complete(deployResult.result());
-                    log.info("deploy", "success", new String[]{"id", "instances", "name", "class"}, deployResult.result(), instances, name, className);
                 } else {
-                    String reason = String.format("Failed to deploy verticle %s", name);
-                    log.error("deploy", "failure", reason, new String[]{"instances", "name", "class"}, instances, name, className, deployResult.cause());
-                    deployId.fail(new Exception(reason));
+                    String message = String.format("Failed to deploy verticle %s", name);
+                    log.debug("deploy", "failure", new String[]{"message"}, message);
+                    deployId.fail(new Exception(message, deployResult.cause()));
                 }
             }
         });
@@ -78,8 +78,8 @@ public class VerticleDeployment implements Deployment {
 
     @Override
     public void abort(Throwable cause) {
-        String reason = String.format("Aborted deploying verticle %s", name);
-        log.error("abort", "error", reason, cause);
-        deployId.fail(new Exception(reason, cause));
+        String message = String.format("Aborted deploying verticle %s", name);
+        log.debug("abort", "failure", new String[]{"message"}, message);
+        deployId.fail(new Exception(message, cause));
     }
 }
