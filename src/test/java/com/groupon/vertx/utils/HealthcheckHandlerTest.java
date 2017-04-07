@@ -44,7 +44,7 @@ import org.mockito.MockitoAnnotations;
 public class HealthcheckHandlerTest {
     private static final HttpResponseStatus OK = HttpResponseStatus.OK;
     private static final HttpResponseStatus SERVICE_UNAVAILABLE = HttpResponseStatus.SERVICE_UNAVAILABLE;
-    private static final String CONTENT_TYPE = "plain/text";
+    private static final String CONTENT_TYPE = "text/plain";
     private static final String CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
 
     @Mock

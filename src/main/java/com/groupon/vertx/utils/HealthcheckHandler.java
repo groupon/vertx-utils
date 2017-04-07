@@ -32,7 +32,7 @@ import io.vertx.core.http.HttpServerRequest;
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
 public abstract class HealthcheckHandler implements Handler<HttpServerRequest> {
     private static final Logger LOG = Logger.getLogger(HealthcheckHandler.class);
-    private static final String CONTENT_TYPE = "plain/text";
+    private static final String CONTENT_TYPE = "text/plain";
     private static final String CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
 
     public abstract void handle(final HttpServerRequest request);
