@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 
 import com.groupon.vertx.utils.Logger;
 
@@ -32,7 +32,7 @@ import com.groupon.vertx.utils.Logger;
  * @since 2.0.1
  * @version 2.0.1
  */
-public class DeploymentMonitorHandler implements AsyncResultHandler<String> {
+public class DeploymentMonitorHandler implements Handler<AsyncResult<String>> {
     private static final Logger log = Logger.getLogger(DeploymentMonitorHandler.class, "verticleDeployHandler");
 
     private final ConcurrentLinkedQueue<Throwable> failures;
@@ -44,7 +44,7 @@ public class DeploymentMonitorHandler implements AsyncResultHandler<String> {
      * @param totalVerticles number of verticles to wait for before invoking the finished handler
      * @param finishedHandler handler to invoke after all verticles have deployed
      */
-    public DeploymentMonitorHandler(int totalVerticles, AsyncResultHandler<Void> finishedHandler) {
+    public DeploymentMonitorHandler(int totalVerticles, Handler<AsyncResult<Void>> finishedHandler) {
         this.totalVerticles = totalVerticles;
 
         failures = new ConcurrentLinkedQueue<>();

@@ -16,9 +16,9 @@
 package com.groupon.vertx.utils.deployment;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
@@ -40,7 +40,7 @@ public class VerticleDeployment implements Deployment {
     protected final Future<String> deployId;
 
 
-    public VerticleDeployment(Vertx vertx, String name, String className, AsyncResultHandler<String> finishedHandler) {
+    public VerticleDeployment(Vertx vertx, String name, String className, Handler<AsyncResult<String>> finishedHandler) {
         this.vertx = vertx;
         this.name = name;
         this.className = className;
@@ -53,7 +53,7 @@ public class VerticleDeployment implements Deployment {
     public void deploy(final int instances, JsonObject config) {
         log.info("deploy", "start", new String[]{"instances", "name", "class"}, instances, name, className);
 
-        doDeploy(instances, config, new AsyncResultHandler<String>() {
+        doDeploy(instances, config, new Handler<AsyncResult<String>>() {
             @Override
             public void handle(AsyncResult<String> deployResult) {
                 if (deployResult.succeeded() && !deployResult.result().isEmpty()) {
@@ -68,7 +68,7 @@ public class VerticleDeployment implements Deployment {
         });
     }
 
-    protected void doDeploy(int instances, JsonObject config, AsyncResultHandler<String> handler) {
+    protected void doDeploy(int instances, JsonObject config, Handler<AsyncResult<String>> handler) {
         DeploymentOptions deploymentOptions = new DeploymentOptions()
                 .setInstances(instances)
                 .setConfig(config)

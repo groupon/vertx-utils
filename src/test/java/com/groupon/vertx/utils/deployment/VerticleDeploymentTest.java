@@ -21,10 +21,10 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Context;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.junit.Before;
@@ -49,10 +49,10 @@ public class VerticleDeploymentTest {
     private Context context;
 
     @Mock
-    private AsyncResultHandler<String> resultHandler;
+    private Handler<AsyncResult<String>> resultHandler;
 
     @Captor
-    private ArgumentCaptor<AsyncResultHandler<String>> resultHandlerCaptor;
+    private ArgumentCaptor<Handler<AsyncResult<String>>> resultHandlerCaptor;
 
     @Captor
     private ArgumentCaptor<AsyncResult<String>> resultCaptor;

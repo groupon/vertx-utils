@@ -17,8 +17,8 @@ package com.groupon.vertx.utils;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonArray;
@@ -61,7 +61,7 @@ public class MainVerticle extends AbstractVerticle {
         }
 
         Future<Void> deployResult = deployVerticles(config);
-        deployResult.setHandler(new AsyncResultHandler<Void>() {
+        deployResult.setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 if (result.succeeded()) {

@@ -1,7 +1,6 @@
 package com.groupon.vertx.utils;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -39,7 +38,7 @@ public class AsyncRescheduleHandler implements Handler<Long> {
         final Handler<Long> that = this;
 
         Future<Void> handlerFuture = Future.future();
-        handlerFuture.setHandler(new AsyncResultHandler<Void>() {
+        handlerFuture.setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> futureResult) {
                 if (futureResult.failed()) {

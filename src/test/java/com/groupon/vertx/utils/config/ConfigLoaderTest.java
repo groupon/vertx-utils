@@ -28,8 +28,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.file.FileSystemException;
@@ -60,7 +60,7 @@ public class ConfigLoaderTest {
     private FileSystem fileSystem;
 
     @Captor
-    private ArgumentCaptor<AsyncResultHandler<Buffer>> handlerCaptor;
+    private ArgumentCaptor<Handler<AsyncResult<Buffer>>> handlerCaptor;
 
     private CountDownLatch latch;
     private ConfigLoader loader;
@@ -83,7 +83,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testNullValues() {
-        loader.load(null, new AsyncResultHandler<JsonObject>() {
+        loader.load(null, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -99,7 +99,7 @@ public class ConfigLoaderTest {
     @Test
     public void testJsonObjectValues() {
         final JsonObject testConfig = new JsonObject();
-        loader.load(testConfig, new AsyncResultHandler<JsonObject>() {
+        loader.load(testConfig, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -115,7 +115,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testBadNonNullValues() {
-        loader.load(new Object(), new AsyncResultHandler<JsonObject>() {
+        loader.load(new Object(), new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -130,7 +130,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testStringValuesAsFiles() throws Exception {
-        loader.load(TEST_PATH, new AsyncResultHandler<JsonObject>() {
+        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -150,7 +150,7 @@ public class ConfigLoaderTest {
     public void testCachesStringValuesAsFiles() throws Exception {
         latch = new CountDownLatch(2);
 
-        loader.load(TEST_PATH, new AsyncResultHandler<JsonObject>() {
+        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -166,7 +166,7 @@ public class ConfigLoaderTest {
         handlerCaptor.getValue().handle(Future.succeededFuture(TEST_BUFFER_GOOD));
         reset(fileSystem);
 
-        loader.load(TEST_PATH, new AsyncResultHandler<JsonObject>() {
+        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -182,7 +182,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testStringValuesAsBadFiles() throws Exception {
-        loader.load(TEST_PATH, new AsyncResultHandler<JsonObject>() {
+        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {
@@ -200,7 +200,7 @@ public class ConfigLoaderTest {
 
     @Test
     public void testStringValuesAsFilesWithBadContent() throws Exception {
-        loader.load(TEST_PATH, new AsyncResultHandler<JsonObject>() {
+        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> result) {
                 try {

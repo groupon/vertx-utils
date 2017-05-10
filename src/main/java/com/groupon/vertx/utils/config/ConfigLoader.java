@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
@@ -53,7 +53,7 @@ public class ConfigLoader {
      * @param field   JsonObject or String
      * @param handler AsyncResultHandler to be called when the config is ready
      */
-    public void load(Object field, AsyncResultHandler<JsonObject> handler) {
+    public void load(Object field, Handler<AsyncResult<JsonObject>> handler) {
         Future<JsonObject> configFuture = load(field);
         configFuture.setHandler(handler);
     }
@@ -94,7 +94,7 @@ public class ConfigLoader {
             configFuture.complete(loadedConfigs.get(path));
         } else {
             final Future<JsonObject> loadedConfigFuture = loadAndParseConfigFromFilesystem(path);
-            loadedConfigFuture.setHandler(new AsyncResultHandler<JsonObject>() {
+            loadedConfigFuture.setHandler(new Handler<AsyncResult<JsonObject>>() {
                 @Override
                 public void handle(AsyncResult<JsonObject> result) {
                     if (result.succeeded()) {
@@ -121,7 +121,7 @@ public class ConfigLoader {
     private Future<JsonObject> loadAndParseConfigFromFilesystem(final String path) {
         final Future<JsonObject> configFuture = Future.future();
 
-        fileSystem.readFile(path, new AsyncResultHandler<Buffer>() {
+        fileSystem.readFile(path, new Handler<AsyncResult<Buffer>>() {
             @Override
             @SuppressFBWarnings("REC_CATCH_EXCEPTION")
             public void handle(AsyncResult<Buffer> result) {
