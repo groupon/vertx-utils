@@ -29,7 +29,7 @@
   <name>Vertx Utilities</name>
   <description>Library of utility classes and functions for use with Vert.x</description>
   <url>https://github.com/groupon/vertx-utils</url>
-  <version>3.2.1-SNAPSHOT</version>
+  <version>3.3.0-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -122,9 +122,9 @@
 
   <properties>
     <!--Vertx dependency versions-->
-    <jackson.version>2.6.1</jackson.version>
-    <netty.version>4.1.1.Final</netty.version>
-    <vertx.version>3.3.2</vertx.version>
+    <jackson.version>2.7.4</jackson.version>
+    <netty.version>4.1.8.Final</netty.version>
+    <vertx.version>3.4.1</vertx.version>
 
     <!--Other dependency versions-->
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>

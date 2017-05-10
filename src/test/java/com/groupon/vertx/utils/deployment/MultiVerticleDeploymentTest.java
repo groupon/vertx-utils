@@ -27,9 +27,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
@@ -78,7 +78,7 @@ public class MultiVerticleDeploymentTest {
     private JsonObject config;
 
     @Captor
-    private ArgumentCaptor<AsyncResultHandler<String>> handlerCaptor;
+    private ArgumentCaptor<Handler<AsyncResult<String>>> handlerCaptor;
 
     private JsonObject createConfig() {
         JsonObject testVerticle = new JsonObject();
@@ -150,7 +150,7 @@ public class MultiVerticleDeploymentTest {
 
     @Test
     public void testSuccess() {
-        multiVerticleDeployment.deploy(config).setHandler(new AsyncResultHandler<Void>() {
+        multiVerticleDeployment.deploy(config).setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 assertTrue("Deployment should succeed", result.succeeded());
@@ -163,7 +163,7 @@ public class MultiVerticleDeploymentTest {
     public void testBadConfig() {
         config.remove("verticles");
 
-        multiVerticleDeployment.deploy(config).setHandler(new AsyncResultHandler<Void>() {
+        multiVerticleDeployment.deploy(config).setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 assertTrue("Deployment should fail", result.failed());
@@ -177,7 +177,7 @@ public class MultiVerticleDeploymentTest {
     public void testDeployFailure() {
         stubDeploymentDeployWithResult(Future.<String>failedFuture(new Exception("failure")));
 
-        multiVerticleDeployment.deploy(config).setHandler(new AsyncResultHandler<Void>() {
+        multiVerticleDeployment.deploy(config).setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 assertTrue("Deployment should fail", result.failed());
@@ -191,7 +191,7 @@ public class MultiVerticleDeploymentTest {
     public void testBadVerticleConfigA() {
         config.getJsonObject("verticles").getJsonObject(VERTICLE_NAME_A).remove("instances");
 
-        multiVerticleDeployment.deploy(config).setHandler(new AsyncResultHandler<Void>() {
+        multiVerticleDeployment.deploy(config).setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 assertTrue("Deployment should fail", result.failed());
@@ -204,7 +204,7 @@ public class MultiVerticleDeploymentTest {
     public void testBadVerticleConfigB() {
         config.getJsonObject("verticles").getJsonObject(VERTICLE_NAME_A).remove("class");
 
-        multiVerticleDeployment.deploy(config).setHandler(new AsyncResultHandler<Void>() {
+        multiVerticleDeployment.deploy(config).setHandler(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 assertTrue("Deployment should fail", result.failed());

@@ -19,8 +19,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -37,7 +37,7 @@ import org.mockito.MockitoAnnotations;
  */
 public class DeploymentMonitorHandlerTest {
     @Mock
-    private AsyncResultHandler<Void> resultHandler;
+    private Handler<AsyncResult<Void>> resultHandler;
 
     @Captor
     private ArgumentCaptor<AsyncResult<Void>> result;

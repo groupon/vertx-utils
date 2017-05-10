@@ -16,7 +16,7 @@
 package com.groupon.vertx.utils;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 
@@ -51,7 +51,7 @@ public class AsyncHealthcheckHandler extends HealthcheckHandler {
         final long startTime = System.currentTimeMillis();
 
         try {
-            vertx.fileSystem().exists(filePath, new AsyncResultHandler<Boolean>() {
+            vertx.fileSystem().exists(filePath, new Handler<AsyncResult<Boolean>>() {
                 @Override
                 public void handle(AsyncResult<Boolean> event) {
                     processHeartBeatResponse(event.result(), request, startTime);

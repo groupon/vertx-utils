@@ -19,8 +19,8 @@ import java.util.Iterator;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
@@ -81,7 +81,7 @@ public class MultiVerticleDeployment {
         final int totalVerticles = deployConfig.size();
 
         log.info("start", "start", new String[]{"message"}, String.format("Deploying %d verticle(s)", totalVerticles));
-        final DeploymentMonitorHandler deploymentMonitorHandler = new DeploymentMonitorHandler(totalVerticles, new AsyncResultHandler<Void>() {
+        final DeploymentMonitorHandler deploymentMonitorHandler = new DeploymentMonitorHandler(totalVerticles, new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> result) {
                 if (result.succeeded()) {
@@ -95,7 +95,7 @@ public class MultiVerticleDeployment {
         final Iterator<VerticleConfig> verticleConfigIterator = deployConfig.iterator();
         VerticleConfig verticleConfig = verticleConfigIterator.next();
         log.info("deploy", "deployFirstVerticle", new String[]{"message"}, String.format("Deploying verticle %s", verticleConfig.getName()));
-        deployVerticle(verticleConfig, new AsyncResultHandler<String>() {
+        deployVerticle(verticleConfig, new Handler<AsyncResult<String>>() {
             @Override
             public void handle(AsyncResult<String> result) {
                 if (verticleConfigIterator.hasNext()) {
@@ -117,7 +117,7 @@ public class MultiVerticleDeployment {
      * @param config VerticleConfig with information about this verticle
      * @param doneHandler handler to invoke upon completion
      */
-    protected void deployVerticle(final VerticleConfig config, final AsyncResultHandler<String> doneHandler) {
+    protected void deployVerticle(final VerticleConfig config, final Handler<AsyncResult<String>> doneHandler) {
 
         final Deployment deployment;
         if (config.isWorker()) {
@@ -127,7 +127,7 @@ public class MultiVerticleDeployment {
         }
 
         // After the verticle config has been found, attempt to deploy the verticle
-        configLoader.load(config.getConfig(), new AsyncResultHandler<JsonObject>() {
+        configLoader.load(config.getConfig(), new Handler<AsyncResult<JsonObject>>() {
             @Override
             public void handle(AsyncResult<JsonObject> configResult) {
                 if (configResult.succeeded()) {

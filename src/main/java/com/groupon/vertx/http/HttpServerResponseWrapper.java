@@ -16,6 +16,7 @@
 package com.groupon.vertx.http;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
@@ -309,5 +310,11 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     public HttpServerResponse sendFile(String filename, long offset, Handler<AsyncResult<Void>> resultHandler) {
         serverResponse.sendFile(filename, offset, resultHandler);
         return this;
+    }
+
+    @Override
+    public HttpServerResponse endHandler(@Nullable Handler<Void> handler) {
+        serverResponse.endHandler(handler);
+        return null;
     }
 }

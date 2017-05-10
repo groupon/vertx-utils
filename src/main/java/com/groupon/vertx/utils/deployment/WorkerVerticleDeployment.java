@@ -15,8 +15,9 @@
  */
 package com.groupon.vertx.utils.deployment;
 
-import io.vertx.core.AsyncResultHandler;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
@@ -34,13 +35,13 @@ public class WorkerVerticleDeployment extends VerticleDeployment {
 
     protected final boolean isMultiThreaded;
 
-    public WorkerVerticleDeployment(Vertx vertx, String name, String className, boolean isMultiThreaded, AsyncResultHandler<String> finishedHandler) {
+    public WorkerVerticleDeployment(Vertx vertx, String name, String className, boolean isMultiThreaded, Handler<AsyncResult<String>> finishedHandler) {
         super(vertx, name, className, finishedHandler);
         this.isMultiThreaded = isMultiThreaded;
     }
 
     @Override
-    protected void doDeploy(int instances, JsonObject config, AsyncResultHandler<String> handler) {
+    protected void doDeploy(int instances, JsonObject config, Handler<AsyncResult<String>> handler) {
         DeploymentOptions deploymentOptions = new DeploymentOptions()
                 .setInstances(instances)
                 .setConfig(config)

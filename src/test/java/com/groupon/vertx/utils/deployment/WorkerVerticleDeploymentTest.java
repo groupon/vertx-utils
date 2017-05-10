@@ -21,7 +21,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.AsyncResultHandler;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -45,7 +44,7 @@ public class WorkerVerticleDeploymentTest {
     private Vertx vertx;
 
     @Mock
-    private AsyncResultHandler<String> resultHandler;
+    private Handler<AsyncResult<String>> resultHandler;
 
     @Captor
     private ArgumentCaptor<Handler<AsyncResult<String>>> handlerCaptor;
