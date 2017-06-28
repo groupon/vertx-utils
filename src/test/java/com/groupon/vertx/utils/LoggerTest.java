@@ -111,9 +111,10 @@ public class LoggerTest {
 
         List<Object> values = paramCaptor.getAllValues();
         assertNotNull(values);
-        assertEquals(2, values.size());
+        assertEquals(3, values.size());
         assertArrayEquals(new String[]{"eventSource", "method"}, (String[]) values.get(0));
         assertArrayEquals(new Object[]{"loggerTest", "method"}, (Object[]) values.get(1));
+        assertEquals(error, values.get(2));
     }
 
     @Test
@@ -140,9 +141,10 @@ public class LoggerTest {
 
         List<Object> values = paramCaptor.getAllValues();
         assertNotNull(values);
-        assertEquals(2, values.size());
+        assertEquals(3, values.size());
         assertArrayEquals(new String[]{"eventSource", "method", "text", "int", "boolean"}, (String[]) values.get(0));
         assertArrayEquals(new Object[]{"loggerTest", "method", "aValue", 2L, false}, (Object[]) values.get(1));
+        assertEquals(error, values.get(2));
     }
 
     @Test
@@ -155,9 +157,10 @@ public class LoggerTest {
 
         List<Object> values = paramCaptor.getAllValues();
         assertNotNull(values);
-        assertEquals(2, values.size());
+        assertEquals(3, values.size());
         assertArrayEquals(new String[]{"eventSource", "method", "text", "int"}, (String[]) values.get(0));
         assertArrayEquals(new Object[]{"loggerTest", "method", "aValue", 2L}, (Object[]) values.get(1));
+        assertEquals(error, values.get(2));
     }
 
     @Test
@@ -199,9 +202,10 @@ public class LoggerTest {
 
         List<Object> values = paramCaptor.getAllValues();
         assertNotNull(values);
-        assertEquals(2, values.size());
+        assertEquals(3, values.size());
         assertArrayEquals(new String[]{"eventSource", "method", "reason"}, (String[]) values.get(0));
         assertArrayEquals(new Object[]{"loggerTest", "method", "reason"}, (Object[]) values.get(1));
+        assertEquals(error, values.get(2));
     }
 
     @Test
@@ -228,9 +232,10 @@ public class LoggerTest {
 
         List<Object> values = paramCaptor.getAllValues();
         assertNotNull(values);
-        assertEquals(2, values.size());
+        assertEquals(3, values.size());
         assertArrayEquals(new String[]{"eventSource", "method", "reason", "text", "int", "boolean"}, (String[]) values.get(0));
         assertArrayEquals(new Object[]{"loggerTest", "method", "reason", "aValue", 2L, false}, (Object[]) values.get(1));
+        assertEquals(error, values.get(2));
     }
 
     @Test
