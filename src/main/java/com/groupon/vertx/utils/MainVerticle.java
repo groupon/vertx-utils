@@ -67,6 +67,11 @@ public class MainVerticle extends AbstractVerticle {
                 if (result.succeeded()) {
                     startedResult.complete(null);
                 } else {
+                    if (result.cause() != null) {
+                        for (Throwable supressed : result.cause().getSuppressed()) {
+                            log.error("deploy", "fail", supressed.getMessage(), supressed.getCause());
+                        }
+                    }
                     if (abortOnFailure) {
                         log.warn("start", "abort", new String[]{"message"}, "Shutting down due to one or more errors");
                         vertx.close();
