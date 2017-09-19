@@ -6,7 +6,7 @@ cache:
   - "$HOME/.m2"
 install: true
 before_script:
-- gpg --import groupon-api.key
+- gpg --import commit_sign.key
 script:
 - mvn clean install --settings settings.xml -P ci,release -Dgpg.skip=true -U
 - if [ \( -n "${TRAVIS_TAG}" \) -a "${TRAVIS_PULL_REQUEST}" = "false" ]; then mvn deploy --settings settings.xml -P ci,release; fi;
