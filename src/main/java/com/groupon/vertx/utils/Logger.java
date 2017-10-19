@@ -54,8 +54,8 @@ public final class Logger {
      * Returns a new logger for the specified target class and event source.  If the event source is not specified it
      * will default to the simple name of the target class.
      *
-     * @param targetClass
-     * @param eventSource
+     * @param targetClass target class for logging
+     * @param eventSource the eventSource
      * @return a new com.groupon.vertx.utils.Logger
      */
     public static Logger getLogger(Class<?> targetClass, String eventSource) {
@@ -66,7 +66,7 @@ public final class Logger {
      * Returns a new logger for the specified target class.  The logger's event source is defaulted to the
      * simple name of the target class with the first letter lower cased.
      *
-     * @param targetClass
+     * @param targetClass target class for logging
      * @return a new com.groupon.vertx.utils.Logger
      */
     public static Logger getLogger(Class<?> targetClass) {

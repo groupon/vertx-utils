@@ -56,6 +56,7 @@ public class MultiVerticleDeployment {
 
     /**
      * Deploy all of the verticles
+     * @param config config json data
      * @return future representing success or failure for the requested deploys
      */
     @SuppressFBWarnings("SIC_INNER_SHOULD_BE_STATIC_ANON")
