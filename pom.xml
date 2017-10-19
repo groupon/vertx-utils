@@ -111,6 +111,15 @@
         <role>developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>acampelo</id>
+      <email>acampelo@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
   </developers>
 
   <scm>
@@ -123,15 +132,15 @@
   <properties>
     <!--Vertx dependency versions-->
     <jackson.version>2.7.4</jackson.version>
-    <netty.version>4.1.8.Final</netty.version>
-    <vertx.version>3.4.1</vertx.version>
+    <netty.version>4.1.15.Final</netty.version>
+    <vertx.version>3.5.0</vertx.version>
 
     <!--Other dependency versions-->
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
     <jodatime.version>2.9.9</jodatime.version>
     <junit.version>4.11</junit.version>
     <logback.version>1.2.3</logback.version>
-    <logback-steno.version>1.17.0</logback-steno.version>
+    <logback-steno.version>1.18.0</logback-steno.version>
     <mockito.version>1.10.19</mockito.version>
     <powermock.version>1.6.6</powermock.version>
     <slf4j.version>1.7.25</slf4j.version>

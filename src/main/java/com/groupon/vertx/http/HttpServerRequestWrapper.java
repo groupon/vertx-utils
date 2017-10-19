@@ -16,6 +16,7 @@
 package com.groupon.vertx.http;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -97,6 +98,11 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     @Override
     public SocketAddress localAddress() {
         return serverRequest.localAddress();
+    }
+
+    @Override
+    public SSLSession sslSession() {
+        return serverRequest.sslSession();
     }
 
     @Override
