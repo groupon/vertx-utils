@@ -82,7 +82,7 @@ public final class Logger {
     }
 
     public void error(String method, String event, String reason, String[] extraValueNames, Object... extraValues) {
-        if (slf4jLog.isErrorEnabled()) {
+        if (isErrorEnabled()) {
             String[] errorKeyArray = buildErrorKeyArray(extraValueNames);
             Object[] errorValueArray = buildErrorValueArray(method, reason, extraValues, errorKeyArray.length);
             Throwable error = extractThrowable(extraValueNames, extraValues);
@@ -100,7 +100,7 @@ public final class Logger {
     }
 
     public void info(String method, String event, String[] extraValueNames, Object... extraValues) {
-        if (slf4jLog.isInfoEnabled()) {
+        if (isInfoEnabled()) {
             String[] keyArray = buildKeyArray(extraValueNames);
             Object[] valueArray = buildValueArray(method, extraValues, keyArray.length);
             Throwable error = extractThrowable(extraValueNames, extraValues);
@@ -122,7 +122,7 @@ public final class Logger {
     }
 
     public void warn(String method, String event, String[] extraValueNames, Object... extraValues) {
-        if (slf4jLog.isWarnEnabled()) {
+        if (isWarnEnabled()) {
             String[] keyArray = buildKeyArray(extraValueNames);
             Object[] valueArray = buildValueArray(method, extraValues, keyArray.length);
             Throwable error = extractThrowable(extraValueNames, extraValues);
@@ -140,7 +140,7 @@ public final class Logger {
     }
 
     public void debug(String method, String event, String[] extraValueNames, Object... extraValues) {
-        if (slf4jLog.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             String[] keyArray = buildKeyArray(extraValueNames);
             Object[] valueArray = buildValueArray(method, extraValues, keyArray.length);
             Throwable error = extractThrowable(extraValueNames, extraValues);
@@ -158,7 +158,7 @@ public final class Logger {
     }
 
     public void trace(String method, String event, String[] extraValueNames, Object... extraValues) {
-        if (slf4jLog.isTraceEnabled()) {
+        if (isTraceEnabled()) {
             String[] keyArray = buildKeyArray(extraValueNames);
             Object[] valueArray = buildValueArray(method, extraValues, keyArray.length);
             Throwable error = extractThrowable(extraValueNames, extraValues);
@@ -258,5 +258,25 @@ public final class Logger {
             }
         }
         return newValues;
+    }
+
+    public boolean isInfoEnabled() {
+        return slf4jLog.isInfoEnabled();
+    }
+
+    public boolean isWarnEnabled() {
+        return slf4jLog.isWarnEnabled();
+    }
+
+    public boolean isTraceEnabled() {
+        return slf4jLog.isTraceEnabled();
+    }
+
+    public boolean isDebugEnabled() {
+        return slf4jLog.isDebugEnabled();
+    }
+
+    public boolean isErrorEnabled() {
+        return slf4jLog.isErrorEnabled();
     }
 }
