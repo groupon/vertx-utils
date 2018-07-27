@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.groupon.api</groupId>
     <artifactId>api-parent-pom</artifactId>
-    <version>1.1.4</version>
+    <version>2.0.0</version>
     <relativePath />
   </parent>
 
@@ -40,60 +40,6 @@
 
   <developers>
     <developer>
-      <id>dustyburwell</id>
-      <email>dburwell@groupon.com</email>
-      <organization>Groupon</organization>
-      <organizationUrl>http://www.groupon.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>gilmarkham</id>
-      <email>gilligan@groupon.com</email>
-      <organization>Groupon</organization>
-      <organizationUrl>http://www.groupon.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>namratalele</id>
-      <email>nlele@groupon.com</email>
-      <organization>Groupon</organization>
-      <organizationUrl>http://www.groupon.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>stuartsiegrist</id>
-      <email>fsiegrist@groupon.com</email>
-      <organization>Groupon</organization>
-      <organizationUrl>http://www.groupon.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>swatikumar</id>
-      <email>swkumar@groupon.com</email>
-      <organization>Groupon</organization>
-      <organizationUrl>http://www.groupon.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>trevormack</id>
-      <email>tmack@groupon.com</email>
-      <organization>Groupon</organization>
-      <organizationUrl>http://www.groupon.com</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-    </developer>
-    <developer>
       <id>tristanblease</id>
       <email>tblease@groupon.com</email>
       <organization>Groupon</organization>
@@ -103,8 +49,8 @@
       </roles>
     </developer>
     <developer>
-      <id>villekoskela</id>
-      <email>vkoskela@groupon.com</email>
+      <id>acampelo</id>
+      <email>acampelo@groupon.com</email>
       <organization>Groupon</organization>
       <organizationUrl>http://www.groupon.com</organizationUrl>
       <roles>
@@ -112,8 +58,17 @@
       </roles>
     </developer>
     <developer>
-      <id>acampelo</id>
-      <email>acampelo@groupon.com</email>
+      <id>jhoongroh</id>
+      <email>jroh@groupon.com</email>
+      <organization>Groupon</organization>
+      <organizationUrl>http://www.groupon.com</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>cchacin</id>
+      <email>cchacin@groupon.com</email>
       <organization>Groupon</organization>
       <organizationUrl>http://www.groupon.com</organizationUrl>
       <roles>
@@ -132,12 +87,11 @@
   <properties>
     <!--Vertx dependency versions-->
     <jackson.version>2.7.4</jackson.version>
-    <netty.version>4.1.15.Final</netty.version>
-    <vertx.version>3.5.0</vertx.version>
+    <netty.version>4.1.19.Final</netty.version>
+    <vertx.version>3.5.3</vertx.version>
 
     <!--Other dependency versions-->
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
-    <jodatime.version>2.9.9</jodatime.version>
     <junit.version>4.11</junit.version>
     <logback.version>1.2.3</logback.version>
     <logback-steno.version>1.18.0</logback-steno.version>
@@ -180,11 +134,6 @@
       <groupId>io.netty</groupId>
       <artifactId>netty-codec-http</artifactId>
       <version>${netty.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime.version}</version>
     </dependency>
     <dependency>
       <groupId>com.arpnetworking.logback</groupId>

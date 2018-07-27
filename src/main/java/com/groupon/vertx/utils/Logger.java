@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public final class Logger {
     private static final String[] EMPTY_EXTRA_NAMES = new String[0];
     private org.slf4j.Logger slf4jLog;
-    private String eventSource = null;
+    private String eventSource;
     private static final String[] BASE_KEYS = new String[]{"eventSource", "method"};
     private static final int BASE_KEYS_LENGTH = BASE_KEYS.length;
     private static final String[] BASE_ERROR_KEYS = new String[]{"eventSource", "method", "reason"};

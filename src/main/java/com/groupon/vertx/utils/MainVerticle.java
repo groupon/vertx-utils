@@ -15,10 +15,10 @@
  */
 package com.groupon.vertx.utils;
 
+import java.lang.reflect.InvocationTargetException;
+
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonArray;
@@ -61,23 +61,20 @@ public class MainVerticle extends AbstractVerticle {
         }
 
         Future<Void> deployResult = deployVerticles(config);
-        deployResult.setHandler(new Handler<AsyncResult<Void>>() {
-            @Override
-            public void handle(AsyncResult<Void> result) {
-                if (result.succeeded()) {
-                    startedResult.complete(null);
+        deployResult.setHandler(result -> {
+            if (result.succeeded()) {
+                startedResult.complete(null);
+            } else {
+                if (result.cause() != null) {
+                    for (Throwable supressed : result.cause().getSuppressed()) {
+                        log.error("deploy", "fail", supressed.getMessage(), supressed.getCause());
+                    }
+                }
+                if (abortOnFailure) {
+                    log.warn("start", "abort", new String[]{"message"}, "Shutting down due to one or more errors");
+                    vertx.close();
                 } else {
-                    if (result.cause() != null) {
-                        for (Throwable supressed : result.cause().getSuppressed()) {
-                            log.error("deploy", "fail", supressed.getMessage(), supressed.getCause());
-                        }
-                    }
-                    if (abortOnFailure) {
-                        log.warn("start", "abort", new String[]{"message"}, "Shutting down due to one or more errors");
-                        vertx.close();
-                    } else {
-                        startedResult.fail(result.cause());
-                    }
+                    startedResult.fail(result.cause());
                 }
             }
         });
@@ -99,9 +96,9 @@ public class MainVerticle extends AbstractVerticle {
                 if (messageCodecClassNameObject instanceof String) {
                     final String messageCodecClassName = (String) messageCodecClassNameObject;
                     try {
-                        final MessageCodec<?, ?>  messageCodec = (MessageCodec<?, ?>) Class.forName(messageCodecClassName).newInstance();
+                        final MessageCodec<?, ?>  messageCodec = (MessageCodec<?, ?>) Class.forName(messageCodecClassName).getDeclaredConstructor().newInstance();
                         vertx.eventBus().registerCodec(messageCodec);
-                    } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                    } catch (final InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException  e) {
                         log.warn("registerMessageCodecs", "start", new String[]{"message", "messageCodecClassName"}, "Failed to instantiate message codec", messageCodecClassName, e);
                         if (abortOnFailure) {
                             throw new CodecRegistrationException(

@@ -35,7 +35,7 @@ public abstract class HealthcheckHandler implements Handler<HttpServerRequest> {
     private static final String CONTENT_TYPE = "text/plain";
     private static final String CACHE_CONTROL = "private, no-cache, no-store, must-revalidate";
 
-    public abstract void handle(final HttpServerRequest request);
+    public abstract void handle(HttpServerRequest request);
 
     protected void processHeartBeatResponse(Boolean exists, HttpServerRequest request, long startTime) {
         HttpResponseStatus status;

@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Groupon.com
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 package com.groupon.vertx.utils.config;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,7 +23,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
 
@@ -94,16 +94,13 @@ public class ConfigLoader {
             configFuture.complete(loadedConfigs.get(path));
         } else {
             final Future<JsonObject> loadedConfigFuture = loadAndParseConfigFromFilesystem(path);
-            loadedConfigFuture.setHandler(new Handler<AsyncResult<JsonObject>>() {
-                @Override
-                public void handle(AsyncResult<JsonObject> result) {
-                    if (result.succeeded()) {
-                        JsonObject loadedConfig = result.result();
-                        loadedConfigs.put(path, loadedConfig);
-                        configFuture.complete(loadedConfig);
-                    } else {
-                        configFuture.fail(result.cause());
-                    }
+            loadedConfigFuture.setHandler(result -> {
+                if (result.succeeded()) {
+                    JsonObject loadedConfig = result.result();
+                    loadedConfigs.put(path, loadedConfig);
+                    configFuture.complete(loadedConfig);
+                } else {
+                    configFuture.fail(result.cause());
                 }
             });
         }
@@ -121,21 +118,17 @@ public class ConfigLoader {
     private Future<JsonObject> loadAndParseConfigFromFilesystem(final String path) {
         final Future<JsonObject> configFuture = Future.future();
 
-        fileSystem.readFile(path, new Handler<AsyncResult<Buffer>>() {
-            @Override
-            @SuppressFBWarnings("REC_CATCH_EXCEPTION")
-            public void handle(AsyncResult<Buffer> result) {
-                if (result.succeeded()) {
-                    try {
-                        final ConfigParser configParser = getConfigParser();
-                        JsonObject loadedConfig = configParser.parse(result.result().toString());
-                        configFuture.complete(loadedConfig);
-                    } catch (Exception e) {
-                        configFuture.fail(e);
-                    }
-                } else {
-                    configFuture.fail(result.cause());
+        fileSystem.readFile(path, result -> {
+            if (result.succeeded()) {
+                try {
+                    final ConfigParser configParser = getConfigParser();
+                    JsonObject loadedConfig = configParser.parse(result.result().toString());
+                    configFuture.complete(loadedConfig);
+                } catch (Exception e) {
+                    configFuture.fail(e);
                 }
+            } else {
+                configFuture.fail(result.cause());
             }
         });
 
@@ -144,10 +137,10 @@ public class ConfigLoader {
 
     @SuppressWarnings("unchecked")
     private ConfigParser getConfigParser()
-            throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         final String configParserClassName = System.getProperty("vertx-utils.config-parser-class-name");
         if (configParserClassName != null) {
-            return (ConfigParser) Class.forName(configParserClassName).newInstance();
+            return (ConfigParser) Class.forName(configParserClassName).getDeclaredConstructor().newInstance();
         }
         return DEFAULT_CONFIG_PARSER;
     }
