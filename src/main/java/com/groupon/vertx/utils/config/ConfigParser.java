@@ -32,5 +32,5 @@ public interface ConfigParser {
      * @param configuration the configuration content
      * @return the JsonObject representing the configuration
      */
-    JsonObject parse(final String configuration);
+    JsonObject parse(String configuration);
 }

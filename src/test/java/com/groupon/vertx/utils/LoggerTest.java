@@ -25,10 +25,12 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 import com.arpnetworking.logback.StenoMarker;
-import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +54,7 @@ public class LoggerTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-        DateTimeUtils.setCurrentMillisFixed(0);
+        Clock.fixed(Instant.EPOCH, ZoneId.systemDefault());
         mockStatic(org.slf4j.LoggerFactory.class);
         slf4jLogger = mock(org.slf4j.Logger.class);
         when(org.slf4j.LoggerFactory.class, "getLogger", LoggerTest.class).thenReturn(slf4jLogger);
