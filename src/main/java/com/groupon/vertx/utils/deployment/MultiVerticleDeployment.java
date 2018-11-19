@@ -128,14 +128,11 @@ public class MultiVerticleDeployment {
         }
 
         // After the verticle config has been found, attempt to deploy the verticle
-        configLoader.load(config.getConfig(), new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> configResult) {
-                if (configResult.succeeded()) {
-                    deployment.deploy(config.getInstances(), configResult.result());
-                } else {
-                    deployment.abort(new Exception(String.format("Failed to load config for verticle %s", config.getName()), configResult.cause()));
-                }
+        configLoader.load(config.getConfig(), configResult -> {
+            if (configResult.succeeded()) {
+                deployment.deploy(config.getInstances(), configResult.result());
+            } else {
+                deployment.abort(new Exception(String.format("Failed to load config for verticle %s", config.getName()), configResult.cause()));
             }
         });
     }
