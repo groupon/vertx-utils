@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Groupon.com
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,11 @@
  */
 package com.groupon.vertx.utils;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -30,8 +30,8 @@ import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -67,20 +67,20 @@ public class HealthcheckHandlerTest {
 
     private HealthcheckHandler handler;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        stub(vertx.fileSystem()).toReturn(fileSystem);
-        stub(request.response()).toReturn(response);
-        stub(request.method()).toReturn(HttpMethod.GET);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
+        when(request.response()).thenReturn(response);
+        when(request.method()).thenReturn(HttpMethod.GET);
 
         handler = new AsyncHealthcheckHandler(vertx, "filepath");
     }
 
     @Test
     public void testHandle() {
-        stub(existsResult.result()).toReturn(true);
+        when(existsResult.result()).thenReturn(true);
         handler.handle(request);
 
         verify(vertx, times(1)).fileSystem();
@@ -99,8 +99,8 @@ public class HealthcheckHandlerTest {
     @Test
     public void testSyncHandle() {
         handler = new SyncHealthcheckHandler(vertx, "filepath");
-        stub(fileSystem.existsBlocking(eq("filepath"))).toReturn(true);
-        stub(vertx.fileSystem()).toReturn(fileSystem);
+        when(fileSystem.existsBlocking(eq("filepath"))).thenReturn(true);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
 
         handler.handle(request);
         verify(vertx, times(1)).fileSystem();
@@ -115,7 +115,7 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testHandleNotExists() {
-        stub(existsResult.result()).toReturn(false);
+        when(existsResult.result()).thenReturn(false);
         handler.handle(request);
 
         verify(vertx, times(1)).fileSystem();
@@ -134,8 +134,8 @@ public class HealthcheckHandlerTest {
     @Test
     public void testSyncHandleNotExists() {
         handler = new SyncHealthcheckHandler(vertx, "filepath");
-        stub(fileSystem.existsBlocking(eq("filepath"))).toReturn(false);
-        stub(vertx.fileSystem()).toReturn(fileSystem);
+        when(fileSystem.existsBlocking(eq("filepath"))).thenReturn(false);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
 
         handler.handle(request);
 
@@ -175,7 +175,7 @@ public class HealthcheckHandlerTest {
         doThrow(exception).when(fileSystem).existsBlocking(eq("filepath"));
 
         handler = new SyncHealthcheckHandler(vertx, "filepath");
-        stub(vertx.fileSystem()).toReturn(fileSystem);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
 
         handler.handle(request);
 
@@ -191,8 +191,8 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testHandleHead() {
-        stub(request.method()).toReturn(HttpMethod.HEAD);
-        stub(existsResult.result()).toReturn(true);
+        when(request.method()).thenReturn(HttpMethod.HEAD);
+        when(existsResult.result()).thenReturn(true);
         handler.handle(request);
 
         verify(vertx, times(1)).fileSystem();
@@ -211,12 +211,12 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testSyncHandleHead() {
-        stub(request.method()).toReturn(HttpMethod.HEAD);
-        stub(existsResult.result()).toReturn(true);
+        when(request.method()).thenReturn(HttpMethod.HEAD);
+        when(existsResult.result()).thenReturn(true);
 
         handler = new SyncHealthcheckHandler(vertx, "filepath");
-        stub(fileSystem.existsBlocking(eq("filepath"))).toReturn(true);
-        stub(vertx.fileSystem()).toReturn(fileSystem);
+        when(fileSystem.existsBlocking(eq("filepath"))).thenReturn(true);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
 
         handler.handle(request);
 
@@ -235,8 +235,8 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testHandleNotExistsHead() {
-        stub(request.method()).toReturn(HttpMethod.HEAD);
-        stub(existsResult.result()).toReturn(false);
+        when(request.method()).thenReturn(HttpMethod.HEAD);
+        when(existsResult.result()).thenReturn(false);
 
         handler.handle(request);
 
@@ -256,11 +256,11 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testSyncHandleNotExistsHead() {
-        stub(request.method()).toReturn(HttpMethod.HEAD);
+        when(request.method()).thenReturn(HttpMethod.HEAD);
 
         handler = new SyncHealthcheckHandler(vertx, "filepath");
-        stub(fileSystem.existsBlocking(eq("filepath"))).toReturn(false);
-        stub(vertx.fileSystem()).toReturn(fileSystem);
+        when(fileSystem.existsBlocking(eq("filepath"))).thenReturn(false);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
 
         handler.handle(request);
 
@@ -278,7 +278,7 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testHandleExistsExceptionHead() {
-        stub(request.method()).toReturn(HttpMethod.HEAD);
+        when(request.method()).thenReturn(HttpMethod.HEAD);
 
         IllegalArgumentException exception = new IllegalArgumentException("Failed");
         String body = SERVICE_UNAVAILABLE.reasonPhrase() + ": " + exception.getMessage();
@@ -300,7 +300,7 @@ public class HealthcheckHandlerTest {
 
     @Test
     public void testSyncHandleExistsExceptionHead() {
-        stub(request.method()).toReturn(HttpMethod.HEAD);
+        when(request.method()).thenReturn(HttpMethod.HEAD);
 
         IllegalArgumentException exception = new IllegalArgumentException("Failed");
         String body = SERVICE_UNAVAILABLE.reasonPhrase() + ": " + exception.getMessage();
@@ -308,7 +308,7 @@ public class HealthcheckHandlerTest {
         doThrow(exception).when(fileSystem).existsBlocking(eq("filepath"));
 
         handler = new SyncHealthcheckHandler(vertx, "filepath");
-        stub(vertx.fileSystem()).toReturn(fileSystem);
+        when(vertx.fileSystem()).thenReturn(fileSystem);
 
         handler.handle(request);
 

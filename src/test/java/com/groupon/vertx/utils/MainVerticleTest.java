@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Groupon.com
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,10 @@
  */
 package com.groupon.vertx.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -37,9 +38,9 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -71,7 +72,7 @@ public class MainVerticleTest {
     @Captor
     private ArgumentCaptor<Handler<AsyncResult<String>>> handlerCaptor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
@@ -86,23 +87,18 @@ public class MainVerticleTest {
         latch = new CountDownLatch(1);
     }
 
-    @After
+    @AfterEach
     public void ensureFinish() throws Exception {
         latch.await(TEST_TIMEOUT, TimeUnit.MILLISECONDS);
 
-        if (latch.getCount() != 0) {
-            fail("Timed out; test did not finish in " + TEST_TIMEOUT + "ms");
-        }
+        assertNotEquals(0, latch.getCount());
     }
 
     @Test
     public void testSuccess() {
-        startedResult.setHandler(new Handler<AsyncResult<Void>>() {
-            @Override
-            public void handle(AsyncResult<Void> result) {
-                assertTrue(result.succeeded());
-                latch.countDown();
-            }
+        startedResult.setHandler(result -> {
+            assertTrue(result.succeeded());
+            latch.countDown();
         });
 
         verticle.start(startedResult);
@@ -121,13 +117,10 @@ public class MainVerticleTest {
     public void testFailureWithoutShutdown() {
         config.put("abortOnFailure", false);
 
-        startedResult.setHandler(new Handler<AsyncResult<Void>>() {
-            @Override
-            public void handle(AsyncResult<Void> result) {
-                assertTrue(result.failed());
-                verify(vertx, never()).close();
-                latch.countDown();
-            }
+        startedResult.setHandler(result -> {
+            assertTrue(result.failed());
+            verify(vertx, never()).close();
+            latch.countDown();
         });
 
         verticle.start(startedResult);
@@ -147,13 +140,10 @@ public class MainVerticleTest {
         config.put("abortOnFailure", false);
         config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$NonExistentCodec\"]"));
 
-        startedResult.setHandler(new Handler<AsyncResult<Void>>() {
-            @Override
-            public void handle(AsyncResult<Void> result) {
-                assertFalse(result.failed());
-                verify(vertx, never()).close();
-                latch.countDown();
-            }
+        startedResult.setHandler(result -> {
+            assertFalse(result.failed());
+            verify(vertx, never()).close();
+            latch.countDown();
         });
 
         verticle.start(startedResult);
@@ -193,12 +183,9 @@ public class MainVerticleTest {
         final EventBus eventBus = Mockito.mock(EventBus.class);
         Mockito.doReturn(eventBus).when(vertx).eventBus();
 
-        try {
+        assertThrows(MainVerticle.CodecRegistrationException.class, () -> {
             MainVerticle.registerMessageCodecs(vertx, config, true);
-            fail("Expected exception not thrown");
-        } catch (final MainVerticle.CodecRegistrationException e) {
-            // Expected exception
-        }
+        });
 
         Mockito.verify(eventBus, Mockito.never()).registerCodec(Mockito.any(MyMessageCodec.class));
         latch.countDown();

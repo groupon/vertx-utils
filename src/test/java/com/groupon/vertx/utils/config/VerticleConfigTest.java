@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Inscope Metrics Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,11 @@
  */
 package com.groupon.vertx.utils.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import io.vertx.core.json.JsonObject;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for VerticleConfig
@@ -37,7 +39,7 @@ public class VerticleConfigTest {
                         "\"config\":\"config/MyVerticleConfig.json\"," +
                         "\"instances\":20" +
                         "}"));
-        Assert.assertEquals(20, verticleConfig.getInstances());
+        assertEquals(20, verticleConfig.getInstances());
     }
 
     @Test
@@ -50,50 +52,58 @@ public class VerticleConfigTest {
                         "\"config\":\"config/MyVerticleConfig.json\"," +
                         "\"instances\":\"21C\"" +
                         "}"));
-        Assert.assertEquals(cores * 21, verticleConfig.getInstances());
+        assertEquals(cores * 21, verticleConfig.getInstances());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testInstancesTooFew() {
-        new VerticleConfig(
-                "testInstancesTooFew",
-                new JsonObject("{" +
-                        "\"class\":\"com.example.MyVerticle\"," +
-                        "\"config\":\"config/MyVerticleConfig.json\"," +
-                        "\"instances\":0" +
-                        "}"));
+        assertThrows(IllegalStateException.class, () -> {
+            new VerticleConfig(
+                    "testInstancesTooFew",
+                    new JsonObject("{" +
+                            "\"class\":\"com.example.MyVerticle\"," +
+                            "\"config\":\"config/MyVerticleConfig.json\"," +
+                            "\"instances\":0" +
+                            "}"));
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testInstancesPerCoreTooFew() {
-        new VerticleConfig(
-                "testInstancesPerCoreTooFew",
-                new JsonObject("{" +
-                        "\"class\":\"com.example.MyVerticle\"," +
-                        "\"config\":\"config/MyVerticleConfig.json\"," +
-                        "\"instances\":\"0C\"" +
-                        "}"));
+        assertThrows(IllegalStateException.class, () -> {
+            new VerticleConfig(
+                    "testInstancesPerCoreTooFew",
+                    new JsonObject("{" +
+                            "\"class\":\"com.example.MyVerticle\"," +
+                            "\"config\":\"config/MyVerticleConfig.json\"," +
+                            "\"instances\":\"0C\"" +
+                            "}"));
+        });
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testInstancesNan() {
-        new VerticleConfig(
-                "testInstancesNan",
-                new JsonObject("{" +
-                        "\"class\":\"com.example.MyVerticle\"," +
-                        "\"config\":\"config/MyVerticleConfig.json\"," +
-                        "\"instances\":\"AB\"" +
-                        "}"));
+        assertThrows(NumberFormatException.class, () -> {
+            new VerticleConfig(
+                    "testInstancesNan",
+                    new JsonObject("{" +
+                            "\"class\":\"com.example.MyVerticle\"," +
+                            "\"config\":\"config/MyVerticleConfig.json\"," +
+                            "\"instances\":\"AB\"" +
+                            "}"));
+        });
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testInstancesPerCoreNan() {
-        new VerticleConfig(
-                "testInstancesPerCoreNan",
-                new JsonObject("{" +
-                        "\"class\":\"com.example.MyVerticle\"," +
-                        "\"config\":\"config/MyVerticleConfig.json\"," +
-                        "\"instances\":\"ABC\"" +
-                        "}"));
+        assertThrows(NumberFormatException.class, () -> {
+            new VerticleConfig(
+                    "testInstancesPerCoreNan",
+                    new JsonObject("{" +
+                            "\"class\":\"com.example.MyVerticle\"," +
+                            "\"config\":\"config/MyVerticleConfig.json\"," +
+                            "\"instances\":\"ABC\"" +
+                            "}"));
+        });
     }
 }
