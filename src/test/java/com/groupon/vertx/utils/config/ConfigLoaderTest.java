@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 Groupon.com
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,11 @@
  */
 package com.groupon.vertx.utils.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -35,9 +35,9 @@ import io.vertx.core.file.FileSystem;
 import io.vertx.core.file.FileSystemException;
 import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonObject;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -65,33 +65,27 @@ public class ConfigLoaderTest {
     private CountDownLatch latch;
     private ConfigLoader loader;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         loader = new ConfigLoader(fileSystem);
         latch = new CountDownLatch(1);
     }
 
-    @After
+    @AfterEach
     public void ensureFinish() throws Exception {
         latch.await(TEST_TIMEOUT, TimeUnit.MILLISECONDS);
-
-        if (latch.getCount() != 0) {
-            fail("Timed out; test did not finish in " + TEST_TIMEOUT + "ms");
-        }
+        assertNotEquals(0, latch.getCount(), "Timed out; test did not finish in " + TEST_TIMEOUT + "ms");
     }
 
     @Test
     public void testNullValues() {
-        loader.load(null, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.succeeded());
-                    assertNotNull(result.result());
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(null, result -> {
+            try {
+                assertTrue(result.succeeded());
+                assertNotNull(result.result());
+            } finally {
+                latch.countDown();
             }
         });
     }
@@ -99,46 +93,37 @@ public class ConfigLoaderTest {
     @Test
     public void testJsonObjectValues() {
         final JsonObject testConfig = new JsonObject();
-        loader.load(testConfig, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.succeeded());
-                    assertNotNull(result.result());
-                    assertEquals(testConfig, result.result());
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(testConfig, result -> {
+            try {
+                assertTrue(result.succeeded());
+                assertNotNull(result.result());
+                assertEquals(testConfig, result.result());
+            } finally {
+                latch.countDown();
             }
         });
     }
 
     @Test
     public void testBadNonNullValues() {
-        loader.load(new Object(), new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.failed());
-                    assertTrue(result.cause() instanceof IllegalStateException);
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(new Object(), result -> {
+            try {
+                assertTrue(result.failed());
+                assertTrue(result.cause() instanceof IllegalStateException);
+            } finally {
+                latch.countDown();
             }
         });
     }
 
     @Test
     public void testStringValuesAsFiles() throws Exception {
-        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.succeeded());
-                    assertNotNull(result.result());
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(TEST_PATH, result -> {
+            try {
+                assertTrue(result.succeeded());
+                assertNotNull(result.result());
+            } finally {
+                latch.countDown();
             }
         });
 
@@ -150,15 +135,12 @@ public class ConfigLoaderTest {
     public void testCachesStringValuesAsFiles() throws Exception {
         latch = new CountDownLatch(2);
 
-        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.succeeded());
-                    assertNotNull(result.result());
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(TEST_PATH, result -> {
+            try {
+                assertTrue(result.succeeded());
+                assertNotNull(result.result());
+            } finally {
+                latch.countDown();
             }
         });
 
@@ -166,31 +148,25 @@ public class ConfigLoaderTest {
         handlerCaptor.getValue().handle(Future.succeededFuture(TEST_BUFFER_GOOD));
         reset(fileSystem);
 
-        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.succeeded());
-                    assertNotNull(result.result());
-                    verifyZeroInteractions(fileSystem);
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(TEST_PATH, result -> {
+            try {
+                assertTrue(result.succeeded());
+                assertNotNull(result.result());
+                verifyZeroInteractions(fileSystem);
+            } finally {
+                latch.countDown();
             }
         });
     }
 
     @Test
     public void testStringValuesAsBadFiles() throws Exception {
-        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.failed());
-                    assertTrue(result.cause() instanceof FileSystemException);
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(TEST_PATH, result -> {
+            try {
+                assertTrue(result.failed());
+                assertTrue(result.cause() instanceof FileSystemException);
+            } finally {
+                latch.countDown();
             }
         });
 
@@ -200,15 +176,12 @@ public class ConfigLoaderTest {
 
     @Test
     public void testStringValuesAsFilesWithBadContent() throws Exception {
-        loader.load(TEST_PATH, new Handler<AsyncResult<JsonObject>>() {
-            @Override
-            public void handle(AsyncResult<JsonObject> result) {
-                try {
-                    assertTrue(result.failed());
-                    assertTrue(result.cause() instanceof DecodeException);
-                } finally {
-                    latch.countDown();
-                }
+        loader.load(TEST_PATH, result -> {
+            try {
+                assertTrue(result.failed());
+                assertTrue(result.cause() instanceof DecodeException);
+            } finally {
+                latch.countDown();
             }
         });
 

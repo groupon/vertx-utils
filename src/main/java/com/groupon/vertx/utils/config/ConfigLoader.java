@@ -124,7 +124,7 @@ public class ConfigLoader {
                     final ConfigParser configParser = getConfigParser();
                     JsonObject loadedConfig = configParser.parse(result.result().toString());
                     configFuture.complete(loadedConfig);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     configFuture.fail(e);
                 }
             } else {

@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.groupon.api</groupId>
     <artifactId>api-parent-pom</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <relativePath />
   </parent>
 
@@ -92,10 +92,10 @@
 
     <!--Other dependency versions-->
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
-    <junit.version>4.11</junit.version>
+    <junit5.version>5.3.0</junit5.version>
     <logback.version>1.2.3</logback.version>
     <logback-steno.version>1.18.0</logback-steno.version>
-    <mockito.version>1.10.19</mockito.version>
+    <mockito.version>2.23.0</mockito.version>
     <powermock.version>1.6.6</powermock.version>
     <slf4j.version>1.7.25</slf4j.version>
 
@@ -148,33 +148,28 @@
 
     <!-- Test dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
+      <artifactId>mockito-core</artifactId>
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-core</artifactId>
-      <version>${powermock.version}</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <version>${powermock.version}</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit5.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- and the engine for surefire and failsafe -->
     <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <version>${powermock.version}</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit5.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -211,10 +206,6 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
       </plugin>
@@ -227,6 +218,7 @@
             <configuration>
               <ignoredUnusedDeclaredDependencies>
                 <dependency>io.vertx:vertx-codegen</dependency>
+                <dependency>org.junit.jupiter:junit-jupiter-engine</dependency>
               </ignoredUnusedDeclaredDependencies>
             </configuration>
           </execution>

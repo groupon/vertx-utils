@@ -15,14 +15,14 @@
  */
 package com.groupon.vertx.utils.deployment;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -44,7 +44,7 @@ public class DeploymentMonitorHandlerTest {
 
     private DeploymentMonitorHandler deploymentMonitorHandler;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
     }
