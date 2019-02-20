@@ -122,7 +122,7 @@ public class MultiVerticleDeployment {
 
         final Deployment deployment;
         if (config.isWorker()) {
-            deployment = deploymentFactory.createWorkerVerticle(vertx, config.getName(), config.getClassName(), config.isMultiThreaded(), doneHandler);
+            deployment = deploymentFactory.createWorkerVerticle(vertx, config.getName(), config.getClassName(), doneHandler);
         } else {
             deployment = deploymentFactory.createVerticle(vertx, config.getName(), config.getClassName(), doneHandler);
         }

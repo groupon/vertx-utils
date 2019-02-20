@@ -57,7 +57,7 @@ public class WorkerVerticleDeploymentTest {
 
     @Test
     public void testDeploy() {
-        new WorkerVerticleDeployment(vertx, "foo", "com.groupon.vertx.Foo", true, resultHandler).deploy(100, testConfig);
+        new WorkerVerticleDeployment(vertx, "foo", "com.groupon.vertx.Foo", resultHandler).deploy(100, testConfig);
 
         verify(vertx).deployVerticle(eq("com.groupon.vertx.Foo"), optionCaptor.capture(), handlerCaptor.capture());
 

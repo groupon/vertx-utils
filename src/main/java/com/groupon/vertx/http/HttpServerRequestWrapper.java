@@ -31,6 +31,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.http.HttpVersion;
 import io.vertx.core.http.ServerWebSocket;
+import io.vertx.core.http.StreamPriority;
 import io.vertx.core.net.NetSocket;
 import io.vertx.core.net.SocketAddress;
 
@@ -93,6 +94,11 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     @Override
     public String host() {
         return serverRequest.host();
+    }
+
+    @Override
+    public long bytesRead() {
+        return serverRequest.bytesRead();
     }
 
     @Override
@@ -176,6 +182,12 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
+    public HttpServerRequest fetch(long amount) {
+        serverRequest.fetch(amount);
+        return this;
+    }
+
+    @Override
     public HttpServerRequest exceptionHandler(Handler<Throwable> handler) {
         serverRequest.exceptionHandler(handler);
         return this;
@@ -236,6 +248,17 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     @Override
     public HttpConnection connection() {
         return serverRequest.connection();
+    }
+
+    @Override
+    public StreamPriority streamPriority() {
+        return serverRequest.streamPriority();
+    }
+
+    @Override
+    public HttpServerRequest streamPriorityHandler(Handler<StreamPriority> handler) {
+        serverRequest.streamPriorityHandler(handler);
+        return this;
     }
 
     @Override

@@ -86,9 +86,8 @@
 
   <properties>
     <!--Vertx dependency versions-->
-    <jackson.version>2.9.6</jackson.version>
-    <netty.version>4.1.19.Final</netty.version>
-    <vertx.version>3.5.4</vertx.version>
+    <netty.version>4.1.30.Final</netty.version>
+    <vertx.version>3.6.3</vertx.version>
 
     <!--Other dependency versions-->
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
