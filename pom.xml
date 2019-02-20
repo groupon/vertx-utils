@@ -29,7 +29,7 @@
   <name>Vertx Utilities</name>
   <description>Library of utility classes and functions for use with Vert.x</description>
   <url>https://github.com/groupon/vertx-utils</url>
-  <version>3.4.1</version>
+  <version>3.4.2-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -81,7 +81,7 @@
     <connection>scm:git:git@github.com:groupon/vertx-utils.git</connection>
     <developerConnection>scm:git:git@github.com:groupon/vertx-utils.git</developerConnection>
     <url>https://github.com/groupon/vertx-utils</url>
-    <tag>vertx-utils-3.4.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
