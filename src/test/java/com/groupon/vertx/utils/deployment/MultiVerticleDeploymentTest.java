@@ -127,7 +127,7 @@ public class MultiVerticleDeploymentTest {
                 any(String.class), handlerCaptor.capture())).thenReturn(deployment);
 
         when(deploymentFactory.createWorkerVerticle(eq(vertx), any(String.class),
-                any(String.class), any(Boolean.class), handlerCaptor.capture())).thenReturn(deployment);
+                any(String.class), handlerCaptor.capture())).thenReturn(deployment);
 
         stubDeploymentDeployWithResult(Future.succeededFuture("success"));
         stubDeploymentAbortWithResult(Future.<String>failedFuture(new Exception("failure")));

@@ -33,11 +33,9 @@ import com.groupon.vertx.utils.Logger;
 public class WorkerVerticleDeployment extends VerticleDeployment {
     private static final Logger log = Logger.getLogger(WorkerVerticleDeployment.class, "workerDeployment");
 
-    protected final boolean isMultiThreaded;
 
-    public WorkerVerticleDeployment(Vertx vertx, String name, String className, boolean isMultiThreaded, Handler<AsyncResult<String>> finishedHandler) {
+    public WorkerVerticleDeployment(Vertx vertx, String name, String className, Handler<AsyncResult<String>> finishedHandler) {
         super(vertx, name, className, finishedHandler);
-        this.isMultiThreaded = isMultiThreaded;
     }
 
     @Override
@@ -45,7 +43,6 @@ public class WorkerVerticleDeployment extends VerticleDeployment {
         DeploymentOptions deploymentOptions = new DeploymentOptions()
                 .setInstances(instances)
                 .setConfig(config)
-                .setMultiThreaded(isMultiThreaded)
                 .setWorker(true);
         vertx.deployVerticle(className, deploymentOptions, handler);
     }
