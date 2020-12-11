@@ -21,6 +21,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
@@ -69,13 +70,14 @@ public class MultiVerticleDeployment {
 
         started = true;
 
-        final Future<Void> deploymentResult = Future.future();
+        final Promise<Void> deploymentPromise = Promise.promise();
+        final Future<Void> deploymentResult = deploymentPromise.future();
         final Config deployConfig;
 
         try {
             deployConfig = new Config(config);
         } catch (Exception e) {
-            deploymentResult.fail(e);
+            deploymentPromise.fail(e);
             return deploymentResult;
         }
 
@@ -86,9 +88,9 @@ public class MultiVerticleDeployment {
             @Override
             public void handle(AsyncResult<Void> result) {
                 if (result.succeeded()) {
-                    deploymentResult.complete(null);
+                    deploymentPromise.complete(null);
                 } else {
-                    deploymentResult.fail(result.cause());
+                    deploymentPromise.fail(result.cause());
                 }
             }
         });

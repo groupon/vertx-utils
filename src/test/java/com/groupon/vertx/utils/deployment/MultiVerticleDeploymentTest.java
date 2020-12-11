@@ -144,7 +144,7 @@ public class MultiVerticleDeploymentTest {
 
     @Test
     public void testSuccess() {
-        multiVerticleDeployment.deploy(config).setHandler(result -> {
+        multiVerticleDeployment.deploy(config).onComplete(result -> {
             assertTrue(result.succeeded(), "Deployment should succeed");
             latch.countDown();
         });
@@ -154,7 +154,7 @@ public class MultiVerticleDeploymentTest {
     public void testBadConfig() {
         config.remove("verticles");
 
-        multiVerticleDeployment.deploy(config).setHandler(result -> {
+        multiVerticleDeployment.deploy(config).onComplete(result -> {
             assertTrue(result.failed(), "Deployment should fail");
             latch.countDown();
         });
@@ -165,7 +165,7 @@ public class MultiVerticleDeploymentTest {
     public void testDeployFailure() {
         stubDeploymentDeployWithResult(Future.<String>failedFuture(new Exception("failure")));
 
-        multiVerticleDeployment.deploy(config).setHandler(result -> {
+        multiVerticleDeployment.deploy(config).onComplete(result -> {
             assertTrue(result.failed(), "Deployment should fail");
             latch.countDown();
         });
@@ -176,7 +176,7 @@ public class MultiVerticleDeploymentTest {
     public void testBadVerticleConfigA() {
         config.getJsonObject("verticles").getJsonObject(VERTICLE_NAME_A).remove("instances");
 
-        multiVerticleDeployment.deploy(config).setHandler(result -> {
+        multiVerticleDeployment.deploy(config).onComplete(result -> {
             assertTrue(result.failed(), "Deployment should fail");
             latch.countDown();
         });
@@ -186,7 +186,7 @@ public class MultiVerticleDeploymentTest {
     public void testBadVerticleConfigB() {
         config.getJsonObject("verticles").getJsonObject(VERTICLE_NAME_A).remove("class");
 
-        multiVerticleDeployment.deploy(config).setHandler(result -> {
+        multiVerticleDeployment.deploy(config).onComplete(result -> {
             assertTrue(result.failed(), "Deployment should fail");
             latch.countDown();
         });

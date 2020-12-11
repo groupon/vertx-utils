@@ -30,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Context;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
@@ -66,8 +66,8 @@ public class MainVerticleTest {
     private MainVerticle verticle;
     private CountDownLatch latch;
     private JsonObject config;
-    private Future<Void> deployResult = Future.future();
-    private Future<Void> startedResult = Future.future();
+    private Promise<Void> deployResult = Promise.promise();
+    private Promise<Void> startedResult = Promise.promise();
 
     @Captor
     private ArgumentCaptor<Handler<AsyncResult<String>>> handlerCaptor;
@@ -96,7 +96,7 @@ public class MainVerticleTest {
 
     @Test
     public void testSuccess() {
-        startedResult.setHandler(result -> {
+        startedResult.future().onComplete(result -> {
             assertTrue(result.succeeded());
             latch.countDown();
         });
@@ -117,7 +117,7 @@ public class MainVerticleTest {
     public void testFailureWithoutShutdown() {
         config.put("abortOnFailure", false);
 
-        startedResult.setHandler(result -> {
+        startedResult.future().onComplete(result -> {
             assertTrue(result.failed());
             verify(vertx, never()).close();
             latch.countDown();
@@ -140,7 +140,7 @@ public class MainVerticleTest {
         config.put("abortOnFailure", false);
         config.put("messageCodecs", new JsonArray("[\"com.groupon.vertx.utils.MainVerticleTest$NonExistentCodec\"]"));
 
-        startedResult.setHandler(result -> {
+        startedResult.future().onComplete(result -> {
             assertFalse(result.failed());
             verify(vertx, never()).close();
             latch.countDown();

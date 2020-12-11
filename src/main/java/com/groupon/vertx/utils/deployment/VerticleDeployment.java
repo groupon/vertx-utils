@@ -17,8 +17,8 @@ package com.groupon.vertx.utils.deployment;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
@@ -37,7 +37,7 @@ public class VerticleDeployment implements Deployment {
     protected final Vertx vertx;
     protected final String name;
     protected final String className;
-    protected final Future<String> deployId;
+    protected final Promise<String> deployId;
 
 
     public VerticleDeployment(Vertx vertx, String name, String className, Handler<AsyncResult<String>> finishedHandler) {
@@ -45,8 +45,8 @@ public class VerticleDeployment implements Deployment {
         this.name = name;
         this.className = className;
 
-        deployId = Future.future();
-        deployId.setHandler(finishedHandler);
+        deployId = Promise.promise();
+        deployId.future().onComplete(finishedHandler);
     }
 
     @Override

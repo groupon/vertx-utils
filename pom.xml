@@ -85,9 +85,10 @@
   </scm>
 
   <properties>
+
     <!--Vertx dependency versions-->
-    <netty.version>4.1.30.Final</netty.version>
-    <vertx.version>3.6.3</vertx.version>
+    <netty.version>4.1.49.Final</netty.version>
+    <vertx.version>3.9.4</vertx.version>
 
     <!--Other dependency versions-->
     <findbugs.annotations.version>3.0.1</findbugs.annotations.version>

@@ -15,14 +15,18 @@
  */
 package com.groupon.vertx.http;
 
+import java.util.Map;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.vertx.codegen.annotations.Nullable;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpConnection;
 import io.vertx.core.http.HttpFrame;
 import io.vertx.core.http.HttpMethod;
@@ -138,8 +142,14 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
+    @Deprecated
     public NetSocket netSocket() {
         return serverRequest.netSocket();
+    }
+
+    @Override
+    public void toNetSocket(Handler<AsyncResult<NetSocket>> handler) {
+        serverRequest.toNetSocket(handler);
     }
 
     @Override
@@ -231,8 +241,14 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
+    @Deprecated
     public ServerWebSocket upgrade() {
         return serverRequest.upgrade();
+    }
+
+    @Override
+    public void toWebSocket(Handler<AsyncResult<ServerWebSocket>> handler) {
+        serverRequest.toWebSocket(handler);
     }
 
     @Override
@@ -259,6 +275,21 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     public HttpServerRequest streamPriorityHandler(Handler<StreamPriority> handler) {
         serverRequest.streamPriorityHandler(handler);
         return this;
+    }
+
+    @Override
+    public @Nullable Cookie getCookie(String s) {
+        return serverRequest.getCookie(s);
+    }
+
+    @Override
+    public int cookieCount() {
+        return serverRequest.cookieCount();
+    }
+
+    @Override
+    public Map<String, Cookie> cookieMap() {
+        return serverRequest.cookieMap();
     }
 
     @Override

@@ -21,8 +21,11 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.Cookie;
+import io.vertx.core.http.HttpFrame;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.http.StreamPriority;
 
 /**
  * Base class for wrapping a Vert.x HttpServerResponse so method can be intercepted.
@@ -138,14 +141,32 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public HttpServerResponse write(Buffer buffer, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(buffer, handler);
+        return this;
+    }
+
+    @Override
     public HttpServerResponse write(String chunk, String enc) {
         serverResponse.write(chunk, enc);
         return this;
     }
 
     @Override
+    public HttpServerResponse write(String s, String s1, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(s, s1, handler);
+        return this;
+    }
+
+    @Override
     public HttpServerResponse write(String chunk) {
         serverResponse.write(chunk);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse write(String s, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(s, handler);
         return this;
     }
 
@@ -212,8 +233,18 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public void end(String s, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(s, handler);
+    }
+
+    @Override
     public void end(String chunk, String enc) {
         serverResponse.end(chunk, enc);
+    }
+
+    @Override
+    public void end(String s, String s1, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(s, s1, handler);
     }
 
     @Override
@@ -222,8 +253,18 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public void end(Buffer buffer, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(buffer, handler);
+    }
+
+    @Override
     public void end() {
         serverResponse.end();
+    }
+
+    @Override
+    public void end(Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(handler);
     }
 
     @Override
@@ -291,6 +332,11 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public void reset() {
+        serverResponse.reset();
+    }
+
+    @Override
     public void reset(final long code) {
         serverResponse.reset(code);
     }
@@ -298,6 +344,34 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     @Override
     public HttpServerResponse writeCustomFrame(final int type, final int flags, final Buffer payload) {
         return serverResponse.writeCustomFrame(type, flags, payload);
+    }
+
+    @Override
+    public HttpServerResponse writeCustomFrame(HttpFrame frame) {
+        serverResponse.writeCustomFrame(frame);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse setStreamPriority(StreamPriority streamPriority) {
+        serverResponse.setStreamPriority(streamPriority);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse addCookie(Cookie cookie) {
+        addCookie(cookie);
+        return this;
+    }
+
+    @Override
+    public @Nullable Cookie removeCookie(String name) {
+        return serverResponse.removeCookie(name);
+    }
+
+    @Override
+    public @Nullable Cookie removeCookie(String s, boolean b) {
+        return serverResponse.removeCookie(s, b);
     }
 
     @Override
