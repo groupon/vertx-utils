@@ -360,7 +360,7 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
 
     @Override
     public HttpServerResponse addCookie(Cookie cookie) {
-        addCookie(cookie);
+        serverResponse.addCookie(cookie);
         return this;
     }
 
