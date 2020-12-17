@@ -233,8 +233,8 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public void end(String s, Handler<AsyncResult<Void>> handler) {
-        serverResponse.end(s, handler);
+    public void end(String chunk, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(chunk, handler);
     }
 
     @Override
@@ -243,8 +243,8 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public void end(String s, String s1, Handler<AsyncResult<Void>> handler) {
-        serverResponse.end(s, s1, handler);
+    public void end(String chunk, String enc, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(chunk, enc, handler);
     }
 
     @Override
