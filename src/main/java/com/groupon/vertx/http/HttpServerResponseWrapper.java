@@ -153,8 +153,8 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public HttpServerResponse write(String s, String s1, Handler<AsyncResult<Void>> handler) {
-        serverResponse.write(s, s1, handler);
+    public HttpServerResponse write(String chunk, String enc, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(chunk, enc, handler);
         return this;
     }
 
@@ -165,8 +165,8 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public HttpServerResponse write(String s, Handler<AsyncResult<Void>> handler) {
-        serverResponse.write(s, handler);
+    public HttpServerResponse write(String chunk, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(chunk, handler);
         return this;
     }
 
@@ -183,14 +183,14 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public HttpServerResponse sendFile(String s, long l, long l1) {
-        serverResponse.sendFile(s, l, l1);
+    public HttpServerResponse sendFile(String filename, long offset, long length) {
+        serverResponse.sendFile(filename, offset, length);
         return this;
     }
 
     @Override
-    public HttpServerResponse sendFile(String s, long l, long l1, Handler<AsyncResult<Void>> handler) {
-        serverResponse.sendFile(s, l, l1);
+    public HttpServerResponse sendFile(String filename, long offset, long length, Handler<AsyncResult<Void>> handler) {
+        serverResponse.sendFile(filename, offset, length, handler);
         return this;
     }
 
@@ -370,8 +370,8 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public @Nullable Cookie removeCookie(String s, boolean b) {
-        return serverResponse.removeCookie(s, b);
+    public @Nullable Cookie removeCookie(String name, boolean invalidate) {
+        return serverResponse.removeCookie(name, invalidate);
     }
 
     @Override

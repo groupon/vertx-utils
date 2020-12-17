@@ -216,18 +216,18 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
-    public String getHeader(String s) {
-        return serverRequest.getHeader(s);
+    public String getHeader(String headerName) {
+        return serverRequest.getHeader(headerName);
     }
 
     @Override
-    public String getHeader(CharSequence charSequence) {
-        return serverRequest.getHeader(charSequence);
+    public String getHeader(CharSequence headerName) {
+        return serverRequest.getHeader(headerName);
     }
 
     @Override
-    public String getParam(String s) {
-        return serverRequest.getParam(s);
+    public String getParam(String paramName) {
+        return serverRequest.getParam(paramName);
     }
 
     @Override
@@ -236,8 +236,8 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
-    public String getFormAttribute(String s) {
-        return serverRequest.getFormAttribute(s);
+    public String getFormAttribute(String attributeName) {
+        return serverRequest.getFormAttribute(attributeName);
     }
 
     @Override
@@ -278,8 +278,8 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
-    public @Nullable Cookie getCookie(String s) {
-        return serverRequest.getCookie(s);
+    public @Nullable Cookie getCookie(String name) {
+        return serverRequest.getCookie(name);
     }
 
     @Override
