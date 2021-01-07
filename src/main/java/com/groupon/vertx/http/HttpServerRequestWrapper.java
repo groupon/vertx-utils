@@ -15,14 +15,18 @@
  */
 package com.groupon.vertx.http;
 
+import java.util.Map;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.vertx.codegen.annotations.Nullable;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpConnection;
 import io.vertx.core.http.HttpFrame;
 import io.vertx.core.http.HttpMethod;
@@ -122,7 +126,7 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
-    public X509Certificate[] peerCertificateChain() throws SSLPeerUnverifiedException {
+    public @Deprecated X509Certificate[] peerCertificateChain() throws SSLPeerUnverifiedException {
         return serverRequest.peerCertificateChain();
     }
 
@@ -138,8 +142,14 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
+    @Deprecated
     public NetSocket netSocket() {
         return serverRequest.netSocket();
+    }
+
+    @Override
+    public void toNetSocket(Handler<AsyncResult<NetSocket>> handler) {
+        serverRequest.toNetSocket(handler);
     }
 
     @Override
@@ -206,18 +216,18 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
-    public String getHeader(String s) {
-        return serverRequest.getHeader(s);
+    public String getHeader(String headerName) {
+        return serverRequest.getHeader(headerName);
     }
 
     @Override
-    public String getHeader(CharSequence charSequence) {
-        return serverRequest.getHeader(charSequence);
+    public String getHeader(CharSequence headerName) {
+        return serverRequest.getHeader(headerName);
     }
 
     @Override
-    public String getParam(String s) {
-        return serverRequest.getParam(s);
+    public String getParam(String paramName) {
+        return serverRequest.getParam(paramName);
     }
 
     @Override
@@ -226,13 +236,19 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     }
 
     @Override
-    public String getFormAttribute(String s) {
-        return serverRequest.getFormAttribute(s);
+    public String getFormAttribute(String attributeName) {
+        return serverRequest.getFormAttribute(attributeName);
     }
 
     @Override
+    @Deprecated
     public ServerWebSocket upgrade() {
         return serverRequest.upgrade();
+    }
+
+    @Override
+    public void toWebSocket(Handler<AsyncResult<ServerWebSocket>> handler) {
+        serverRequest.toWebSocket(handler);
     }
 
     @Override
@@ -259,6 +275,21 @@ public class HttpServerRequestWrapper implements HttpServerRequest {
     public HttpServerRequest streamPriorityHandler(Handler<StreamPriority> handler) {
         serverRequest.streamPriorityHandler(handler);
         return this;
+    }
+
+    @Override
+    public @Nullable Cookie getCookie(String name) {
+        return serverRequest.getCookie(name);
+    }
+
+    @Override
+    public int cookieCount() {
+        return serverRequest.cookieCount();
+    }
+
+    @Override
+    public Map<String, Cookie> cookieMap() {
+        return serverRequest.cookieMap();
     }
 
     @Override

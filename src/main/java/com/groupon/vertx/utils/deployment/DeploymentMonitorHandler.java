@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 
 import com.groupon.vertx.utils.Logger;
 
@@ -38,7 +38,7 @@ public class DeploymentMonitorHandler implements Handler<AsyncResult<String>> {
     private final ConcurrentLinkedQueue<Throwable> failures;
     private final AtomicInteger deploymentsRemaining;
     private final int totalVerticles;
-    private final Future<Void> future;
+    private final Promise<Void> promise;
 
     /**
      * @param totalVerticles number of verticles to wait for before invoking the finished handler
@@ -50,8 +50,8 @@ public class DeploymentMonitorHandler implements Handler<AsyncResult<String>> {
         failures = new ConcurrentLinkedQueue<>();
         deploymentsRemaining = new AtomicInteger(totalVerticles);
 
-        future = Future.future();
-        future.setHandler(finishedHandler);
+        promise = Promise.promise();
+        promise.future().onComplete(finishedHandler);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class DeploymentMonitorHandler implements Handler<AsyncResult<String>> {
     private void handleCompletion() {
         if (failures.isEmpty()) {
             log.info("handleCompletion", "success", new String[]{"message"}, String.format("Deployed %d verticle(s) successfully", totalVerticles));
-            future.complete(null);
+            promise.complete(null);
         } else {
             String reason = String.format("Failed to deploy %d of %d verticle(s)", failures.size(), totalVerticles);
 
@@ -88,7 +88,7 @@ public class DeploymentMonitorHandler implements Handler<AsyncResult<String>> {
 
             log.error("handleCompletion", "error", reason, cause);
 
-            future.fail(cause);
+            promise.fail(cause);
         }
     }
 }

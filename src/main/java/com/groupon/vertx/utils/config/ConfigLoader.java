@@ -23,6 +23,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
 
@@ -55,7 +56,7 @@ public class ConfigLoader {
      */
     public void load(Object field, Handler<AsyncResult<JsonObject>> handler) {
         Future<JsonObject> configFuture = load(field);
-        configFuture.setHandler(handler);
+        configFuture.onComplete(handler);
     }
 
     public Future<JsonObject> load(Object field) {
@@ -65,15 +66,18 @@ public class ConfigLoader {
             if (field instanceof String) {
                 configFuture = getOrLoadConfig((String) field);
             } else if (field instanceof JsonObject) {
-                configFuture = Future.future();
-                configFuture.complete((JsonObject) field);
+                Promise<JsonObject> configPromise = Promise.promise();
+                configFuture = configPromise.future();
+                configPromise.complete((JsonObject) field);
             } else {
-                configFuture = Future.future();
-                configFuture.fail(new IllegalStateException("Field `config` must contain an object or a string (path to the JSON config file)"));
+                Promise<JsonObject> configPromise = Promise.promise();
+                configFuture = configPromise.future();
+                configPromise.fail(new IllegalStateException("Field `config` must contain an object or a string (path to the JSON config file)"));
             }
         } else {
-            configFuture = Future.future();
-            configFuture.complete(new JsonObject());
+            Promise<JsonObject> configPromise = Promise.promise();
+            configFuture = configPromise.future();
+            configPromise.complete(new JsonObject());
         }
 
         return configFuture;
@@ -88,24 +92,24 @@ public class ConfigLoader {
      */
     @SuppressFBWarnings("SIC_INNER_SHOULD_BE_STATIC_ANON")
     private Future<JsonObject> getOrLoadConfig(final String path) {
-        final Future<JsonObject> configFuture = Future.future();
+        final Promise<JsonObject> configPromise = Promise.promise();
 
         if (loadedConfigs.containsKey(path)) {
-            configFuture.complete(loadedConfigs.get(path));
+            configPromise.complete(loadedConfigs.get(path));
         } else {
             final Future<JsonObject> loadedConfigFuture = loadAndParseConfigFromFilesystem(path);
-            loadedConfigFuture.setHandler(result -> {
+            loadedConfigFuture.onComplete(result -> {
                 if (result.succeeded()) {
                     JsonObject loadedConfig = result.result();
                     loadedConfigs.put(path, loadedConfig);
-                    configFuture.complete(loadedConfig);
+                    configPromise.complete(loadedConfig);
                 } else {
-                    configFuture.fail(result.cause());
+                    configPromise.fail(result.cause());
                 }
             });
         }
 
-        return configFuture;
+        return configPromise.future();
     }
 
     /**
@@ -116,23 +120,23 @@ public class ConfigLoader {
      */
     @SuppressFBWarnings("SIC_INNER_SHOULD_BE_STATIC_ANON")
     private Future<JsonObject> loadAndParseConfigFromFilesystem(final String path) {
-        final Future<JsonObject> configFuture = Future.future();
+        final Promise<JsonObject> configPromise = Promise.promise();
 
         fileSystem.readFile(path, result -> {
             if (result.succeeded()) {
                 try {
                     final ConfigParser configParser = getConfigParser();
                     JsonObject loadedConfig = configParser.parse(result.result().toString());
-                    configFuture.complete(loadedConfig);
+                    configPromise.complete(loadedConfig);
                 } catch (Throwable e) {
-                    configFuture.fail(e);
+                    configPromise.fail(e);
                 }
             } else {
-                configFuture.fail(result.cause());
+                configPromise.fail(result.cause());
             }
         });
 
-        return configFuture;
+        return configPromise.future();
     }
 
     @SuppressWarnings("unchecked")

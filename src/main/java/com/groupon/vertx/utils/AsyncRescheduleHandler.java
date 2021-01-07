@@ -3,6 +3,7 @@ package com.groupon.vertx.utils;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 
 /**
@@ -15,10 +16,10 @@ public class AsyncRescheduleHandler implements Handler<Long> {
 
     private static final Logger log = Logger.getLogger(RescheduleHandler.class, "rescheduleHandler");
     private final Vertx vertx;
-    private final Handler<Future<Void>> handler;
+    private final Handler<Promise<Void>> handler;
     private final int interval;
 
-    public AsyncRescheduleHandler(Vertx vertx, Handler<Future<Void>> handler, int interval) {
+    public AsyncRescheduleHandler(Vertx vertx, Handler<Promise<Void>> handler, int interval) {
         if (vertx == null) {
             throw new IllegalArgumentException("Vertx cannot be null");
         }
@@ -37,8 +38,9 @@ public class AsyncRescheduleHandler implements Handler<Long> {
         log.debug("handle", "started");
         final Handler<Long> that = this;
 
-        Future<Void> handlerFuture = Future.future();
-        handlerFuture.setHandler(new Handler<AsyncResult<Void>>() {
+        Promise<Void> handlerPromise = Promise.promise();
+        Future<Void> handlerFuture = handlerPromise.future();
+        handlerFuture.onComplete(new Handler<AsyncResult<Void>>() {
             @Override
             public void handle(AsyncResult<Void> futureResult) {
                 if (futureResult.failed()) {
@@ -50,6 +52,6 @@ public class AsyncRescheduleHandler implements Handler<Long> {
             }
         });
 
-        handler.handle(handlerFuture);
+        handler.handle(handlerPromise);
     }
 }

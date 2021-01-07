@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageCodec;
 import io.vertx.core.json.JsonArray;
@@ -48,7 +49,7 @@ public class MainVerticle extends AbstractVerticle {
      * @param startedResult future indicating when all verticles have been deployed successfully
      */
     @Override
-    public void start(final Future<Void> startedResult) {
+    public void start(final Promise<Void> startedResult) {
         final JsonObject config = config();
         final boolean abortOnFailure = config.getBoolean(ABORT_ON_FAILURE_FIELD, true);
 
@@ -61,7 +62,7 @@ public class MainVerticle extends AbstractVerticle {
         }
 
         Future<Void> deployResult = deployVerticles(config);
-        deployResult.setHandler(result -> {
+        deployResult.onComplete(result -> {
             if (result.succeeded()) {
                 startedResult.complete(null);
             } else {

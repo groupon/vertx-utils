@@ -21,8 +21,11 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.Cookie;
+import io.vertx.core.http.HttpFrame;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.http.StreamPriority;
 
 /**
  * Base class for wrapping a Vert.x HttpServerResponse so method can be intercepted.
@@ -138,14 +141,32 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public HttpServerResponse write(Buffer buffer, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(buffer, handler);
+        return this;
+    }
+
+    @Override
     public HttpServerResponse write(String chunk, String enc) {
         serverResponse.write(chunk, enc);
         return this;
     }
 
     @Override
+    public HttpServerResponse write(String chunk, String enc, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(chunk, enc, handler);
+        return this;
+    }
+
+    @Override
     public HttpServerResponse write(String chunk) {
         serverResponse.write(chunk);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse write(String chunk, Handler<AsyncResult<Void>> handler) {
+        serverResponse.write(chunk, handler);
         return this;
     }
 
@@ -162,14 +183,14 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
-    public HttpServerResponse sendFile(String s, long l, long l1) {
-        serverResponse.sendFile(s, l, l1);
+    public HttpServerResponse sendFile(String filename, long offset, long length) {
+        serverResponse.sendFile(filename, offset, length);
         return this;
     }
 
     @Override
-    public HttpServerResponse sendFile(String s, long l, long l1, Handler<AsyncResult<Void>> handler) {
-        serverResponse.sendFile(s, l, l1);
+    public HttpServerResponse sendFile(String filename, long offset, long length, Handler<AsyncResult<Void>> handler) {
+        serverResponse.sendFile(filename, offset, length, handler);
         return this;
     }
 
@@ -212,8 +233,18 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public void end(String chunk, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(chunk, handler);
+    }
+
+    @Override
     public void end(String chunk, String enc) {
         serverResponse.end(chunk, enc);
+    }
+
+    @Override
+    public void end(String chunk, String enc, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(chunk, enc, handler);
     }
 
     @Override
@@ -222,8 +253,18 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public void end(Buffer buffer, Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(buffer, handler);
+    }
+
+    @Override
     public void end() {
         serverResponse.end();
+    }
+
+    @Override
+    public void end(Handler<AsyncResult<Void>> handler) {
+        serverResponse.end(handler);
     }
 
     @Override
@@ -291,6 +332,11 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     }
 
     @Override
+    public void reset() {
+        serverResponse.reset();
+    }
+
+    @Override
     public void reset(final long code) {
         serverResponse.reset(code);
     }
@@ -298,6 +344,34 @@ public class HttpServerResponseWrapper implements HttpServerResponse {
     @Override
     public HttpServerResponse writeCustomFrame(final int type, final int flags, final Buffer payload) {
         return serverResponse.writeCustomFrame(type, flags, payload);
+    }
+
+    @Override
+    public HttpServerResponse writeCustomFrame(HttpFrame frame) {
+        serverResponse.writeCustomFrame(frame);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse setStreamPriority(StreamPriority streamPriority) {
+        serverResponse.setStreamPriority(streamPriority);
+        return this;
+    }
+
+    @Override
+    public HttpServerResponse addCookie(Cookie cookie) {
+        serverResponse.addCookie(cookie);
+        return this;
+    }
+
+    @Override
+    public @Nullable Cookie removeCookie(String name) {
+        return serverResponse.removeCookie(name);
+    }
+
+    @Override
+    public @Nullable Cookie removeCookie(String name, boolean invalidate) {
+        return serverResponse.removeCookie(name, invalidate);
     }
 
     @Override
